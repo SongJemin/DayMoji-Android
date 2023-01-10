@@ -1,12 +1,27 @@
 package com.songjem.emotionnote.presentation.main
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import com.songjem.emotionnote.R
+import com.songjem.emotionnote.base.BaseActivity
+import com.songjem.emotionnote.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
-class MainActivity : AppCompatActivity() {
+@AndroidEntryPoint
+class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
+
+    private val viewModel : MainViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding.viewModel = viewModel
+        setObserve()
+    }
+
+    private fun setObserve() {
+        viewModel.testVal.observe(this@MainActivity, Observer { testData ->
+            binding.tvTestResult.text = testData
+        })
     }
 }
