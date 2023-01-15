@@ -18,4 +18,6 @@ interface TestRepository {
     fun insertLocalData(
         testData: TestItem
     ) : Completable
+
+    fun deleteAllLocalData() : Completable
 }

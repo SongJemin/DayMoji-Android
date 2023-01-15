@@ -59,6 +59,13 @@ class TestRepositoryImpl @Inject constructor(
     override fun insertLocalData(testItem: TestItem): Completable {
         Log.d("songjem", "Insert testItem id = " + testItem.id + ", val = " + testItem.testVal)
         val testData = TestEntity(testItem.id, testItem.testVal)
-        return localTestDataSource.insertLocalTestData(testData)
+//        val insertResult = localTestDataSource.insertLocalTestData(testData)
+//        Log.d("songjem", "insertResult = $insertResult")
+        return  localTestDataSource.insertLocalTestData(testData)
+    }
+
+    override fun deleteAllLocalData(): Completable {
+        Log.d("songjem", "deleteAllLocalData")
+        return localTestDataSource.deleteAllTestDatas()
     }
 }
