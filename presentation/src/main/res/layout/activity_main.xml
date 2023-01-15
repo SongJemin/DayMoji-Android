@@ -4,7 +4,6 @@
         <variable
             name="viewModel"
             type="com.songjem.emotionnote.presentation.main.MainViewModel" />
-
     </data>
     <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -13,62 +12,123 @@
         android:layout_height="match_parent"
         tools:context=".presentation.main.MainActivity">
 
-        <EditText
-            android:id="@+id/et_test_main"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
+        <Button
+            android:id="@+id/btn_record_emotion_main"
+            android:layout_width="300dp"
+            android:layout_height="70dp"
+            android:text="@string/main_voice_record"
             app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="100dp"
-            android:layout_marginStart="50dp"
-            android:hint="테스트 입력칸"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.1"
+            android:onClick="@{() -> viewModel.dailyVoiceRecord()}"
             />
 
-        <Button
-            android:id="@+id/btn_test_insert_main"
-            android:layout_width="100dp"
-            android:layout_height="0dp"
-            app:layout_constraintLeft_toRightOf="@+id/et_test_main"
-            app:layout_constraintTop_toTopOf="@+id/et_test_main"
-            app:layout_constraintBottom_toBottomOf="@+id/et_test_main"
-            android:layout_marginStart="20dp"
-            android:text="저장"
-            android:onClick="@{() -> viewModel.insertTestData(etTestMain.getText().toString())}"
-            />
-
-        <Button
-            android:id="@+id/btn_test_load_main"
-            android:layout_width="100dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/btn_test_insert_main"
-            app:layout_constraintTop_toBottomOf="@+id/btn_test_insert_main"
+        <EditText
+            android:id="@+id/et_write_emotion_main"
+            android:layout_width="0dp"
+            android:layout_height="100dp"
+            app:layout_constraintTop_toBottomOf="@+id/btn_record_emotion_main"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_main"
+            app:layout_constraintEnd_toEndOf="@+id/btn_record_emotion_main"
             android:layout_marginTop="20dp"
-            android:text="불러오기"
-            android:onClick="@{() -> viewModel.getTestLocalDatas()}"
+            android:hint="오늘의 감정을 기록하세요."
             />
 
         <Button
-            android:id="@+id/btn_test_delete_main"
-            android:layout_width="100dp"
-            android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/btn_test_insert_main"
-            app:layout_constraintTop_toBottomOf="@+id/btn_test_load_main"
-            android:layout_marginTop="20dp"
-            android:text="전체 삭제"
-            android:onClick="@{() -> viewModel.deleteAllTestData()}"
+            android:id="@+id/btn_write_emotion_main"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            app:layout_constraintTop_toBottomOf="@+id/et_write_emotion_main"
+            app:layout_constraintStart_toStartOf="@+id/et_write_emotion_main"
+            app:layout_constraintEnd_toEndOf="@+id/et_write_emotion_main"
+            android:text="입력완료"
+            android:layout_marginTop="10dp"
             />
 
         <TextView
-            android:id="@+id/tv_test_result"
+            android:id="@+id/tv_daily_emotion_main"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/btn_write_emotion_main"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_main"
+            app:layout_constraintEnd_toEndOf="@+id/btn_record_emotion_main"
+            android:layout_marginTop="20dp"
+            android:text="내용"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+        <Button
+            android:id="@+id/btn_sentiment_analysis_main"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_daily_emotion_main"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_main"
+            app:layout_constraintEnd_toEndOf="@+id/btn_record_emotion_main"
+            android:text="@string/main_sentiment_analysis"
+            android:layout_marginTop="50dp"
+            android:onClick="@{() -> viewModel.reqSentimentAnalysis(tvDailyEmotionMain.getText().toString())}"
+            />
+
+        <TextView
+            android:id="@+id/tv_emotion_status_main"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="데이터 이력"
-            app:layout_constraintTop_toBottomOf="@+id/et_test_main"
+            app:layout_constraintTop_toBottomOf="@+id/btn_sentiment_analysis_main"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="250dp"
-            android:textColor="@color/black"
+            android:layout_marginTop="20dp"
             android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/tv_emotion_positive_level_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_emotion_status_main"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/tv_emotion_negative_level_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_emotion_positive_level_main"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+
+        <TextView
+            android:id="@+id/tv_emotion_neutral_level_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_emotion_negative_level_main"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            />
+        <TextView
+            android:id="@+id/tv_current_date_main"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toBottomOf="@+id/tv_emotion_neutral_level_main"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginTop="20dp"
+            android:textSize="20sp"
+            android:textStyle="bold"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>

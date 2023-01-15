@@ -3,6 +3,7 @@ package com.songjem.emotionnote.di.module
 import android.util.Log
 import com.google.gson.GsonBuilder
 import com.songjem.data.datasource.remote.api.ApiClient
+import com.songjem.data.datasource.remote.api.NaverApi
 import com.songjem.data.datasource.remote.api.TestApi
 import com.songjem.emotionnote.BuildConfig
 import dagger.Module
@@ -24,8 +25,14 @@ object TestApiModule {
 
     @Singleton
     @Provides
-    fun provideApiInterface(retrofit: Retrofit): TestApi {
+    fun provideTestApiInterface(retrofit: Retrofit): TestApi {
         return retrofit.create(TestApi::class.java)
+    }
+
+    @Singleton
+    @Provides
+    fun provideNaverApiInterface(retrofit: Retrofit): NaverApi {
+        return retrofit.create(NaverApi::class.java)
     }
 
     @Singleton

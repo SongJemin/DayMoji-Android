@@ -4,12 +4,14 @@ import android.content.Context
 import androidx.room.Room
 import com.songjem.data.datasource.local.dao.TestDao
 import com.songjem.data.datasource.local.database.TestDatabase
+import com.songjem.data.datasource.remote.api.NaverApi
 import com.songjem.data.datasource.remote.api.TestApi
 import com.songjem.data.repository.AnalysisRepositoryImpl
 import com.songjem.data.repository.TestRepositoryImpl
 import com.songjem.data.repository.local.LocalTestDataSource
 import com.songjem.data.repository.local.LocalTestDataSourceImpl
 import com.songjem.data.repository.remote.naver.AnalysisDataSource
+import com.songjem.data.repository.remote.naver.AnalysisDataSourceImpl
 import com.songjem.data.repository.remote.test.RemoteTestDataSource
 import com.songjem.data.repository.remote.test.RemoteTestDataSourceImpl
 import com.songjem.domain.repository.AnalysisRepository
@@ -27,7 +29,7 @@ object TestDataModule {
 
     @Singleton
     @Provides
-    fun provideMovieDao(testDatabase: TestDatabase): TestDao {
+    fun provideTestDao(testDatabase: TestDatabase): TestDao {
         return testDatabase.testDao()
     }
 
@@ -37,7 +39,7 @@ object TestDataModule {
         return Room.databaseBuilder(
             context,
             TestDatabase::class.java,
-            "Movie.db"
+            "Test.db"
         ).build()
     }
 
@@ -55,11 +57,17 @@ object TestDataModule {
 
     @Singleton
     @Provides
-    fun provideMovieRepository(
+    fun provideTestRepository(
         localTestDataSource: LocalTestDataSource,
         remoteTestDataSource: RemoteTestDataSource
     ): TestRepository {
         return TestRepositoryImpl(localTestDataSource, remoteTestDataSource)
+    }
+
+    @Singleton
+    @Provides
+    fun provideAnalysisDataSource(naverApi: NaverApi) : AnalysisDataSource {
+        return AnalysisDataSourceImpl(naverApi)
     }
 
     @Singleton
