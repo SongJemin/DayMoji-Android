@@ -4,7 +4,7 @@ import android.util.Log
 import com.songjem.data.datasource.local.model.TestEntity
 import com.songjem.data.mapper.mapperToTest
 import com.songjem.data.repository.local.LocalTestDataSource
-import com.songjem.data.repository.remote.RemoteTestDataSource
+import com.songjem.data.repository.remote.test.RemoteTestDataSource
 import com.songjem.domain.model.TestItem
 import com.songjem.domain.repository.TestRepository
 import io.reactivex.Completable
@@ -61,7 +61,7 @@ class TestRepositoryImpl @Inject constructor(
         val testData = TestEntity(testItem.id, testItem.testVal)
 //        val insertResult = localTestDataSource.insertLocalTestData(testData)
 //        Log.d("songjem", "insertResult = $insertResult")
-        return  localTestDataSource.insertLocalTestData(testData)
+        return localTestDataSource.insertLocalTestData(testData)
     }
 
     override fun deleteAllLocalData(): Completable {

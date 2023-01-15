@@ -1,4 +1,4 @@
-package com.songjem.domain.usecase
+package com.songjem.domain.usecase.test
 
 import com.songjem.domain.repository.TestRepository
 import io.reactivex.Completable

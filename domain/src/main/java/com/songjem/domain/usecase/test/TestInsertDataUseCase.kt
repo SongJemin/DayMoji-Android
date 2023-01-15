@@ -1,12 +1,13 @@
-package com.songjem.domain.usecase
+package com.songjem.domain.usecase.test
 
 import com.songjem.domain.model.TestItem
 import com.songjem.domain.repository.TestRepository
-import io.reactivex.Single
+import io.reactivex.Completable
 import javax.inject.Inject
 
-class TestGetRemoteDataUseCase
+class TestInsertDataUseCase
 @Inject constructor(private val testRepository: TestRepository) {
     operator fun invoke(
-    ) : Single<List<TestItem>> = testRepository.getRemoteTestDatas()
+        testItem: TestItem
+    ) : Completable = testRepository.insertLocalData(testItem)
 }

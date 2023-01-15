@@ -1,12 +1,12 @@
-package com.songjem.domain.usecase
+package com.songjem.domain.usecase.test
 
 import com.songjem.domain.model.TestItem
 import com.songjem.domain.repository.TestRepository
-import io.reactivex.Flowable
+import io.reactivex.Single
 import javax.inject.Inject
 
-class TestGetDataUseCase
+class TestGetRemoteDataUseCase
 @Inject constructor(private val testRepository: TestRepository) {
     operator fun invoke(
-    ) : Flowable<List<TestItem>> = testRepository.getAllTestData()
+    ) : Single<List<TestItem>> = testRepository.getRemoteTestDatas()
 }

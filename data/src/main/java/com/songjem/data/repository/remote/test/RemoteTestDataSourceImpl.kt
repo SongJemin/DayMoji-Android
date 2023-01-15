@@ -1,4 +1,4 @@
-package com.songjem.data.repository.remote
+package com.songjem.data.repository.remote.test
 
 import com.songjem.data.datasource.remote.api.TestApi
 import com.songjem.data.datasource.remote.response.TestRemoteResponse

@@ -1,5 +1,5 @@
 package com.songjem.data.datasource.remote.api
 
 object ApiClient {
-    const val BASE_URL = "https://www.naver.com"
+    const val NAVER_API_URL = "https://naveropenapi.apigw.ntruss.com"
 }

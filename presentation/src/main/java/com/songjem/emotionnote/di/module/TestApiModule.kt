@@ -32,7 +32,7 @@ object TestApiModule {
     @Provides
     fun provideRetrofit(okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(ApiClient.BASE_URL)
+            .baseUrl(ApiClient.NAVER_API_URL)
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create()) // Rx도 사용하기 때문에 추가 필요.
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
