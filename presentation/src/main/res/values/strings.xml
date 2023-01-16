@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">EmotionNote</string>
-    <string name="main_voice_record">녹음하기</string>
-    <string name="main_sentiment_analysis">감정분석</string>
+    <string name="record_voice_record">녹음하기</string>
+    <string name="record_sentiment_analysis">감정분석</string>
 </resources>

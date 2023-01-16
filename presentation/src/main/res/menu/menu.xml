@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_calendar_menu"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="캘린더"/>
+    <item
+        android:id="@+id/item_record_menu"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="기록"/>
+    <item
+        android:id="@+id/item_dashboard_menu"
+        app:showAsAction="ifRoom"
+        android:enabled="true"
+        android:title="대시보드"/>
+</menu>

@@ -1,52 +1,62 @@
 package com.songjem.emotionnote.presentation.main
 
-import android.Manifest
+import android.content.Intent
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.activity.viewModels
-import androidx.core.app.ActivityCompat
-import com.songjem.data.util.DateUtil
-import com.songjem.data.util.DateUtil.dateToString
+import androidx.fragment.app.Fragment
+import com.google.android.material.navigation.NavigationBarView
 import com.songjem.emotionnote.R
 import com.songjem.emotionnote.base.BaseActivity
 import com.songjem.emotionnote.databinding.ActivityMainBinding
-import dagger.hilt.android.AndroidEntryPoint
+import com.songjem.emotionnote.presentation.main.calendar.CalendarFragment
+import com.songjem.emotionnote.presentation.main.dashboard.DashboardFragment
+import com.songjem.emotionnote.presentation.main.record.RecordActivity
 
-@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
-    private val viewModel : MainViewModel by viewModels()
+    private lateinit var calendarFragment: Fragment
+    private lateinit var dashboardFragment: Fragment
+
+    private val mainViewModel : MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding.viewModel = viewModel
-        checkPermission()
-        setObserve()
 
-        binding.btnWriteEmotionMain.setOnClickListener {
-            binding.tvDailyEmotionMain.text = binding.etWriteEmotionMain.text.toString()
-        }
-    }
+        binding.viewModel = mainViewModel
+        calendarFragment = CalendarFragment()
+        dashboardFragment = DashboardFragment()
 
-    private fun setObserve() {
-        viewModel.dailyEmotion.observe(this) { dailyEmotion ->
-            binding.tvEmotionStatusMain.text = "오늘기분 : " + dailyEmotion.emotionStatus
-            binding.tvEmotionPositiveLevelMain.text = "긍정수치 : " + dailyEmotion.emotionDetail.positive.toString()
-            binding.tvEmotionNegativeLevelMain.text = "부정수치 : " + dailyEmotion.emotionDetail.negative.toString()
-            binding.tvEmotionNeutralLevelMain.text = "중립수치 : " + dailyEmotion.emotionDetail.neutral.toString()
-            binding.tvCurrentDateMain.text = "오늘날짜 : " + DateUtil.currentDate().dateToString("yyyyMMdd")
-        }
+        supportFragmentManager.beginTransaction().replace(R.id.fl_container_main, calendarFragment).commit()
 
-        viewModel.voiceRecordContent.observe(this) { recordContent ->
-            binding.tvDailyEmotionMain.text = recordContent
-        }
-    }
-
-    private fun checkPermission(){
-        // 퍼미션 체크
-        ActivityCompat.requestPermissions(
-            this, arrayOf(
-                Manifest.permission.INTERNET,
-                Manifest.permission.RECORD_AUDIO
-            ), 1
+        val bottomNavigationView = findViewById<NavigationBarView>(R.id.bn_navigator_main)
+        bottomNavigationView.setOnItemSelectedListener (
+            object: NavigationBarView.OnItemSelectedListener {
+                override fun onNavigationItemSelected(item: MenuItem): Boolean {
+                    var selectedFragment: Fragment ?= null
+                    when(item.itemId) {
+                        R.id.item_calendar_menu -> return(changeFragment(calendarFragment))
+                        R.id.item_dashboard_menu -> return(changeFragment(dashboardFragment))
+                        R.id.item_record_menu -> startRecord()
+                    }
+                    return false
+                }
+            }
         )
+    }
+
+    private fun changeFragment(selectedFragment: Fragment?) : Boolean {
+        selectedFragment?.let {
+            supportFragmentManager
+                .beginTransaction()
+                .replace(R.id.fl_container_main, selectedFragment)
+                .commit()
+            return true
+        }
+        return false
+    }
+
+    private fun startRecord() {
+        val intent = Intent(applicationContext, RecordActivity::class.java)
+        startActivity(intent)
     }
 }
