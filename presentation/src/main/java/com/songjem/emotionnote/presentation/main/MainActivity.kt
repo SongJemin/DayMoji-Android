@@ -14,8 +14,8 @@ import com.songjem.emotionnote.presentation.main.dashboard.DashboardFragment
 import com.songjem.emotionnote.presentation.main.record.RecordActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
-    private lateinit var calendarFragment: Fragment
-    private lateinit var dashboardFragment: Fragment
+    private lateinit var calendarFragment: CalendarFragment
+    private lateinit var dashboardFragment: DashboardFragment
 
     private val mainViewModel : MainViewModel by viewModels()
 

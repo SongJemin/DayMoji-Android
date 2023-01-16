@@ -1,22 +1,14 @@
 package com.songjem.emotionnote.presentation.main.calendar
 
-import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.fragment.app.Fragment
 import com.songjem.emotionnote.R
+import com.songjem.emotionnote.base.BaseFragment
+import com.songjem.emotionnote.databinding.FragmentCalendarBinding
 
-class CalendarFragment : Fragment() {
+class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment_calendar) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    override fun initView() {
+        binding.apply {
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_calendar, container, false)
+        }
     }
 }
