@@ -6,15 +6,18 @@
         android:id="@+id/item_calendar_menu"
         app:showAsAction="ifRoom"
         android:enabled="true"
+        android:icon="@drawable/tab_calendar_record_icon"
         android:title="캘린더"/>
     <item
         android:id="@+id/item_record_menu"
         app:showAsAction="ifRoom"
         android:enabled="true"
+        android:icon="@drawable/tab_record_plus_icon"
         android:title="기록"/>
     <item
         android:id="@+id/item_dashboard_menu"
         app:showAsAction="ifRoom"
         android:enabled="true"
+        android:icon="@drawable/tab_dashboard_record_icon"
         android:title="대시보드"/>
 </menu>
