@@ -83,4 +83,7 @@ dependencies {
     // viewModel
     implementation 'androidx.activity:activity-ktx:1.6.1'
     implementation 'androidx.fragment:fragment-ktx:1.5.5'
+
+    // MP Android Chart
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

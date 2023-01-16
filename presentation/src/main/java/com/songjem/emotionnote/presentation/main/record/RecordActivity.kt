@@ -20,10 +20,6 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         binding.viewModel = viewModel
         checkPermission()
         setObserve()
-
-        binding.btnWriteEmotionRecord.setOnClickListener {
-            binding.tvDailyEmotionRecord.text = binding.etWriteEmotionRecord.text.toString()
-        }
     }
 
     private fun setObserve() {
@@ -36,7 +32,7 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         }
 
         viewModel.voiceRecordContent.observe(this) { recordContent ->
-            binding.tvDailyEmotionRecord.text = recordContent
+            binding.etDailyEmotionRecord.setText(recordContent)
         }
     }
 

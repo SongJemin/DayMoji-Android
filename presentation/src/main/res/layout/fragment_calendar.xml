@@ -2,6 +2,9 @@
 <layout
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
+        <variable
+            name="viewModel"
+            type="com.songjem.emotionnote.presentation.main.calendar.CalendarViewModel" />
     </data>
     <RelativeLayout
         android:layout_width="match_parent"

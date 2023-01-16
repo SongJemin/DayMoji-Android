@@ -64,6 +64,10 @@ class RecordViewModel
         speechRecognizer.startListening(intent)
     }
 
+    fun saveDailyAnalysis() {
+
+    }
+
     private fun listener(): RecognitionListener = object : RecognitionListener {
         override fun onReadyForSpeech(p0: Bundle?) {
             Toast.makeText(BaseApplication.context(), "onReadyForSpeech", Toast.LENGTH_SHORT).show()

@@ -12,64 +12,52 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <ImageView
+            android:id="@+id/iv_voice_record"
+            android:layout_width="150dp"
+            android:layout_height="200dp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.01"
+            android:src="@drawable/voice_record_icon"
+            />
         <Button
             android:id="@+id/btn_record_emotion_record"
             android:layout_width="300dp"
             android:layout_height="70dp"
             android:text="@string/record_voice_record"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/iv_voice_record"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintVertical_bias="0.1"
             android:onClick="@{() -> viewModel.dailyVoiceRecord()}"
             />
 
         <EditText
-            android:id="@+id/et_write_emotion_record"
+            android:id="@+id/et_daily_emotion_record"
             android:layout_width="0dp"
-            android:layout_height="100dp"
+            android:layout_height="180dp"
             app:layout_constraintTop_toBottomOf="@+id/btn_record_emotion_record"
             app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
             app:layout_constraintEnd_toEndOf="@+id/btn_record_emotion_record"
             android:layout_marginTop="20dp"
-            android:hint="오늘의 감정을 기록하세요."
-            />
-
-        <Button
-            android:id="@+id/btn_write_emotion_record"
-            android:layout_width="0dp"
-            android:layout_height="70dp"
-            app:layout_constraintTop_toBottomOf="@+id/et_write_emotion_record"
-            app:layout_constraintStart_toStartOf="@+id/et_write_emotion_record"
-            app:layout_constraintEnd_toEndOf="@+id/et_write_emotion_record"
-            android:text="입력완료"
-            android:layout_marginTop="10dp"
-            />
-
-        <TextView
-            android:id="@+id/tv_daily_emotion_record"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintTop_toBottomOf="@+id/btn_write_emotion_record"
-            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
-            app:layout_constraintEnd_toEndOf="@+id/btn_record_emotion_record"
-            android:layout_marginTop="20dp"
-            android:text="내용"
-            android:textSize="20sp"
-            android:textStyle="bold"
+            android:gravity="top"
+            android:background="@drawable/daily_emotion_edit_border"
+            android:hint="오늘의 감정을 이야기하거나 \n직접 기록해주세요."
+            android:padding="10dp"
             />
 
         <Button
             android:id="@+id/btn_sentiment_analysis_record"
             android:layout_width="0dp"
             android:layout_height="70dp"
-            app:layout_constraintTop_toBottomOf="@+id/tv_daily_emotion_record"
+            app:layout_constraintTop_toBottomOf="@+id/et_daily_emotion_record"
             app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
             app:layout_constraintEnd_toEndOf="@+id/btn_record_emotion_record"
             android:text="@string/record_sentiment_analysis"
-            android:layout_marginTop="50dp"
-            android:onClick="@{() -> viewModel.reqSentimentAnalysis(tvDailyEmotionRecord.getText().toString())}"
+            android:layout_marginTop="20dp"
+            android:onClick="@{() -> viewModel.reqSentimentAnalysis(etDailyEmotionRecord.getText().toString())}"
             />
 
         <TextView
@@ -82,6 +70,7 @@
             android:layout_marginTop="20dp"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:text="오늘기분 : "
             />
 
         <TextView
@@ -91,9 +80,10 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_emotion_status_record"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:text="긍정수치 : "
             />
 
         <TextView
@@ -103,9 +93,10 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_emotion_positive_level_record"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:text="부정수치 : "
             />
 
         <TextView
@@ -115,9 +106,10 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_emotion_negative_level_record"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:text="긍정수치 : "
             />
         <TextView
             android:id="@+id/tv_current_date_record"
@@ -126,9 +118,22 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_emotion_neutral_level_record"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
+            android:text="오늘날짜 : "
+            />
+
+        <Button
+            android:id="@+id/btn_save_analysis_record"
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            app:layout_constraintTop_toBottomOf="@+id/tv_current_date_record"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
+            app:layout_constraintEnd_toEndOf="@+id/btn_record_emotion_record"
+            android:text="@string/record_save_analysis"
+            android:layout_marginTop="20dp"
+            android:onClick="@{() -> viewModel.saveDailyAnalysis()}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
