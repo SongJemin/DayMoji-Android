@@ -14,7 +14,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
             val sundayDecorator = SundayDecorator()
             val saturdayDecorator = SaturdayDacorator()
-            val todayDecorator = TodayDecorator(context!!)
+            val todayDecorator = TodayDecorator(requireContext())
 
             binding.cvReportCalendar.addDecorators(sundayDecorator, saturdayDecorator, todayDecorator)
         }
