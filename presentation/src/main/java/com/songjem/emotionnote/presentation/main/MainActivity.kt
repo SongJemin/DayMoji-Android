@@ -32,7 +32,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         bottomNavigationView.setOnItemSelectedListener (
             object: NavigationBarView.OnItemSelectedListener {
                 override fun onNavigationItemSelected(item: MenuItem): Boolean {
-                    var selectedFragment: Fragment ?= null
                     when(item.itemId) {
                         R.id.item_calendar_menu -> return(changeFragment(calendarFragment))
                         R.id.item_dashboard_menu -> return(changeFragment(dashboardFragment))
