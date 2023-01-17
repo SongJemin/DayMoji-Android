@@ -1,4 +1,4 @@
-package com.songjem.emotionnote.utils
+package com.songjem.emotionnote.utils.chart
 
 import android.annotation.SuppressLint
 import android.content.Context

@@ -11,7 +11,7 @@ import com.github.mikephil.charting.formatter.ValueFormatter
 import com.songjem.emotionnote.R
 import com.songjem.emotionnote.base.BaseFragment
 import com.songjem.emotionnote.databinding.FragmentDashboardBinding
-import com.songjem.emotionnote.utils.MyMarkerView
+import com.songjem.emotionnote.utils.chart.MyMarkerView
 
 
 class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragment_dashboard) {
@@ -58,7 +58,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         lineChart.extraBottomOffset = 15f // 간격
         lineChart.description.isEnabled = false // chart 밑에 description 표시 유무
 
-        val markerView = MyMarkerView(context, com.songjem.emotionnote.R.layout.custom_marker_view)
+        val markerView = MyMarkerView(context, R.layout.custom_marker_view)
         markerView.chartView = lineChart
         lineChart.marker = markerView
 
