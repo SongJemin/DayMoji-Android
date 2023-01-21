@@ -16,6 +16,6 @@ class TodayDecorator(context: Context): DayViewDecorator {
         return day?.equals(date)!!
     }
     override fun decorate(view: DayViewFacade?) {
-        view?.setBackgroundDrawable(drawable)
+//        view?.setBackgroundDrawable(drawable)
     }
 }

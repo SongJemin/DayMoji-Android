@@ -1,4 +1,4 @@
-package com.songjem.emotionnote.utils
+package com.songjem.emotionnote.utils.def
 
 object Constants {
     const val NAVER_CLIENT_ID = "5xlk8slzo8"

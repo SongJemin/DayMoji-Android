@@ -15,7 +15,7 @@ import com.songjem.domain.model.SentimentAnalysisItem
 import com.songjem.domain.usecase.analysis.SentimentAnalysisUseCase
 import com.songjem.emotionnote.base.BaseViewModel
 import com.songjem.emotionnote.di.BaseApplication
-import com.songjem.emotionnote.utils.Constants
+import com.songjem.emotionnote.utils.def.Constants
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers

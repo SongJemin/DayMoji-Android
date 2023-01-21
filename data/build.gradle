@@ -75,4 +75,7 @@ dependencies {
 
     // Gson
     implementation "com.google.code.gson:gson:$gson_version"
+
+    // Material CalendarView
+    implementation 'com.github.prolificinteractive:material-calendarview:1.6.0'
 }

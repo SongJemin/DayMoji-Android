@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item>
+        <shape
+            android:shape="rectangle">
+            <stroke
+                android:width="1dp"
+                android:color="#00000000"/>
+            <corners android:radius="4dp"/>
+            <solid android:color="#00000000"/>
+            <size
+                android:width="16dp"
+                android:height="16dp">
+
+            </size>
+        </shape>
+    </item>
+    <item
+        android:width="16dp"
+        android:height="16dp"
+        android:bottom="2dp"
+        android:drawable="@drawable/love_emotion_icon"
+        android:gravity="bottom|center"/>
+</layer-list>
