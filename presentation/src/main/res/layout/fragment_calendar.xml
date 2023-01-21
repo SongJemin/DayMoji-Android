@@ -32,15 +32,95 @@
             android:layout_below="@+id/view_barrier_calendar"
             >
             <TextView
+                android:id="@+id/tv_date_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="해당 날짜 감정기록 상세"
+                android:text="선택 날짜"
                 android:textColor="@color/black"
-                android:textSize="20sp"
-                android:layout_centerInParent="true"
+                android:textSize="15sp"
+                android:layout_marginTop="15dp"
+                android:layout_marginStart="15dp"
                 />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:layout_below="@+id/tv_date_calendar"
+                android:weightSum="100"
+                >
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="35"
+                    >
+                    <TextView
+                        android:id="@+id/tv_report_content_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="감정 기록 내용"
+                        android:textSize="15sp"
+                        android:textColor="@color/gray"
+                        android:layout_marginHorizontal="50dp"
+                        android:layout_centerVertical="true"
+                        />
+                </RelativeLayout>
 
+                <LinearLayout
+                    android:id="@+id/ll_emotion_level_calendar"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="65"
+                    android:paddingHorizontal="50dp"
+                    android:orientation="vertical"
+                    >
+
+                    <View
+                        android:id="@+id/view_report_content_calendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:background="#c3c3c3"
+                        />
+                    <TextView
+                        android:id="@+id/tv_emotion_status_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="감정상태 : "
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:layout_marginTop="15dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_positive_level_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="긍정수치 : "
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:layout_marginTop="20dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_negative_level_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="부정수치 : "
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:layout_marginTop="20dp"
+                        />
+
+                    <TextView
+                        android:id="@+id/tv_neutral_level_calendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="중립수치 : "
+                        android:textColor="@color/black"
+                        android:textSize="17sp"
+                        android:layout_marginTop="20dp"
+                        />
+                </LinearLayout>
+            </LinearLayout>
         </RelativeLayout>
-
     </RelativeLayout>
 </layout>

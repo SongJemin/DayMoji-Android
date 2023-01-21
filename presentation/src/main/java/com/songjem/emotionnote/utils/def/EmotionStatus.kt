@@ -6,22 +6,22 @@ enum class EmotionStatus {
     companion object {
         fun getEmotionStatus(emotion: String): EmotionStatus {
             when (emotion) {
-                "happy" -> {
+                "행복함" -> {
                     return HAPPY
                 }
-                "angry" -> {
+                "화남" -> {
                     return ANGRY
                 }
-                "sad" -> {
+                "슬픔" -> {
                     return SAD
                 }
-                "sosad" -> {
+                "살짝슬픔" -> {
                     return SOSAD
                 }
-                "soso" -> {
+                "그저그럼" -> {
                     return SOSO
                 }
-                "love" -> {
+                "사랑스러움" -> {
                     return LOVE
                 }
                 else -> {
