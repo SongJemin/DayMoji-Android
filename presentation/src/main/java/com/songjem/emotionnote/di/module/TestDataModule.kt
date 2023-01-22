@@ -29,8 +29,8 @@ object TestDataModule {
 
     @Singleton
     @Provides
-    fun provideTestDao(testDatabase: EmotionDatabase): EmotionDao {
-        return testDatabase.testDao()
+    fun provideEmotionDao(emotionDatabase: EmotionDatabase): EmotionDao {
+        return emotionDatabase.emotionDao()
     }
 
     @Singleton
@@ -39,7 +39,7 @@ object TestDataModule {
         return Room.databaseBuilder(
             context,
             EmotionDatabase::class.java,
-            "Test.db"
+            "EmotionDiary.db"
         ).build()
     }
 
@@ -51,17 +51,17 @@ object TestDataModule {
 
     @Singleton
     @Provides
-    fun provideLocalDataSource(testDao: EmotionDao): LocalEmotionDataSource {
-        return LocalEmotionDataSourceImpl(testDao)
+    fun provideLocalEmotionDataSource(emotionDao: EmotionDao): LocalEmotionDataSource {
+        return LocalEmotionDataSourceImpl(emotionDao)
     }
 
     @Singleton
     @Provides
-    fun provideTestRepository(
-        localTestDataSource: LocalEmotionDataSource,
+    fun provideEmotionRepository(
+        localEmotionDataSource: LocalEmotionDataSource,
         remoteTestDataSource: RemoteTestDataSource
     ): EmotionRepository {
-        return EmotionRepositoryImpl(localTestDataSource, remoteTestDataSource)
+        return EmotionRepositoryImpl(localEmotionDataSource, remoteTestDataSource)
     }
 
     @Singleton

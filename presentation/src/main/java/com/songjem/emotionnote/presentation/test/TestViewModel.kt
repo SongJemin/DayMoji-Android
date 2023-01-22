@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.songjem.domain.model.TestItem
 import com.songjem.domain.usecase.*
 import com.songjem.domain.usecase.test.*
 import com.songjem.emotionnote.base.BaseViewModel
@@ -16,53 +15,39 @@ import javax.inject.Inject
 @HiltViewModel
 class TestViewModel @Inject constructor(
     private val testGetDataUseCase : TestGetDataUseCase,
-    private val testGetLocalDataUseCase: TestGetLocalDataUseCase,
+    private val getEmotionReportsUseCase: GetEmotionReportsUseCase,
     private val testGetRemoteDataUseCase: TestGetRemoteDataUseCase,
-    private val testInsertDataUseCase: TestInsertDataUseCase,
-    private val testDeleteAllDataUseCase : TestDeleteAllDataUseCase
+    private val deleteAllEmotionReportUseCase : DeleteAllEmotionReportUseCase
     ) : BaseViewModel() {
 
-    private var _testVal = MutableLiveData<String>()
-    val testVal : LiveData<String> get() = _testVal
+    private var _emotionReportListData = MutableLiveData<String>()
+    val emotionReportListData : LiveData<String> get() = _emotionReportListData
 
     @SuppressLint("CheckResult")
-    fun insertTestData(testData : String) {
-        val testItem = TestItem(testVal = testData)
-        testInsertDataUseCase(testItem)
+    fun getEmotionReportList() {
+        getEmotionReportsUseCase()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Log.d("songjem", "insertData")
-            }, {
-                Log.d("songjem", "insertData throwable, msg = " + it.message)
-            })
-    }
-
-    @SuppressLint("CheckResult")
-    fun getTestLocalDatas() {
-        testGetLocalDataUseCase()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ testDatas ->
-                if (testDatas.isEmpty()) {
-                    _testVal.value = "No Data"
+            .subscribe({ datas ->
+                if (datas.isEmpty()) {
+                    _emotionReportListData.value = "No Data"
                 } else {
-                    _testVal.value = testDatas.toString()
+                    _emotionReportListData.value = datas.toString()
                 }
             }, {
-                _testVal.value = "Error"
+                _emotionReportListData.value = "Error"
             })
     }
 
     @SuppressLint("CheckResult")
-    fun deleteAllTestData() {
-        testDeleteAllDataUseCase()
+    fun deleteAllEmotionReport() {
+        deleteAllEmotionReportUseCase()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
-                Log.d("songjem", "deleteAllTestData")
+                Log.d("songjem", "deleteAllEmotionReport")
             }, {
-                Log.d("songjem", "delete throwable msg = " + it.message)
+                Log.d("songjem", "deleteAllEmotionReport, throwable msg = " + it.message)
             })
     }
 }

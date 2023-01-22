@@ -11,8 +11,10 @@ import android.widget.Toast
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.songjem.domain.model.DailyEmotion
+import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.model.SentimentAnalysisItem
 import com.songjem.domain.usecase.analysis.SentimentAnalysisUseCase
+import com.songjem.domain.usecase.test.*
 import com.songjem.emotionnote.base.BaseViewModel
 import com.songjem.emotionnote.di.BaseApplication
 import com.songjem.emotionnote.utils.def.Constants
@@ -22,9 +24,9 @@ import io.reactivex.schedulers.Schedulers
 import javax.inject.Inject
 
 @HiltViewModel
-class RecordViewModel
-@Inject constructor(
-    private val sentimentAnalysisUseCase: SentimentAnalysisUseCase)
+class RecordViewModel @Inject constructor(
+    private val sentimentAnalysisUseCase: SentimentAnalysisUseCase,
+    private val insertEmotionReportUseCase: InsertEmotionReportUseCase)
     : BaseViewModel() {
 
     private lateinit var speechRecognizer: SpeechRecognizer
@@ -37,8 +39,23 @@ class RecordViewModel
     private var _dailyEmotion = MutableLiveData<DailyEmotion>()
     val dailyEmotion : LiveData<DailyEmotion> get() = _dailyEmotion
 
+    private var _emotionReportListData = MutableLiveData<String>()
+    val emotionReportListData : LiveData<String> get() = _emotionReportListData
+
     init {
         initVoiceRecord()
+    }
+
+    @SuppressLint("CheckResult")
+    fun insertEmotionReport(emotionReport : EmotionReportItem) {
+        insertEmotionReportUseCase(emotionReport)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Log.d("songjem", "insertEmotionReport")
+            }, {
+                Log.d("songjem", "insertEmotionReport throwable, msg = " + it.message)
+            })
     }
 
     @SuppressLint("CheckResult")
@@ -62,10 +79,6 @@ class RecordViewModel
         speechRecognizer = SpeechRecognizer.createSpeechRecognizer(BaseApplication.context())
         speechRecognizer.setRecognitionListener(listener())
         speechRecognizer.startListening(intent)
-    }
-
-    fun saveDailyAnalysis() {
-
     }
 
     private fun listener(): RecognitionListener = object : RecognitionListener {

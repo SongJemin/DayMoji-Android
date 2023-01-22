@@ -1,22 +1,22 @@
 package com.songjem.domain.repository
 
-import com.songjem.domain.model.TestItem
+import com.songjem.domain.model.EmotionReportItem
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
 interface EmotionRepository {
     fun getAllTestData(
-    ) : Flowable<List<TestItem>>
+    ) : Flowable<List<EmotionReportItem>>
 
     fun getAllEmotionReport(
-    ) : Flowable<List<TestItem>>
+    ) : Flowable<List<EmotionReportItem>>
 
     fun getRemoteTestDatas(
-    ) : Single<List<TestItem>>
+    ) : Single<List<EmotionReportItem>>
 
     fun insertLocalData(
-        testData: TestItem
+        emotionReportItem: EmotionReportItem
     ) : Completable
 
     fun deleteAllLocalData() : Completable

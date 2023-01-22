@@ -5,11 +5,11 @@ data class EmotionReportItem (
     val targetDate : String,
     val reportContent : String,
     val emotionStatus : String,
-    val positive : Float,
-    val negative : Float,
-    val neutral : Float,
-    val score : Float,
-    val magnitude : Float,
+    val positive : Float? = null,
+    val negative : Float? = null,
+    val neutral : Float? = null,
+    val score : Float? = null,
+    val magnitude : Float? = null,
     val firstReportDate : String,
     val lastReportDate : String
 )

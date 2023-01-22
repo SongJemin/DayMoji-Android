@@ -10,11 +10,11 @@ data class EmotionReport (
     @ColumnInfo(name = "targetDate") val targetDate : String,
     @ColumnInfo(name = "reportContent") val reportContent : String,
     @ColumnInfo(name = "emotionStatus") val emotionStatus : String,
-    @ColumnInfo(name = "positive") val positiveLevel : Float?,
-    @ColumnInfo(name = "negative") val negativeLevel : Float?,
-    @ColumnInfo(name = "neutral") val neutral : Float?,
-    @ColumnInfo(name = "score") val score : Float?,
-    @ColumnInfo(name = "magnitude") val magnitude : Float?,
+    @ColumnInfo(name = "positive") val positive : Float? = null,
+    @ColumnInfo(name = "negative") val negative : Float? = null,
+    @ColumnInfo(name = "neutral") val neutral : Float? = null,
+    @ColumnInfo(name = "score") val score : Float? = null,
+    @ColumnInfo(name = "magnitude") val magnitude : Float? = null,
     @ColumnInfo(name = "firstReportDate") val firstReportDate : String,
     @ColumnInfo(name = "lastReportDate") val lastReportDate : String
 )

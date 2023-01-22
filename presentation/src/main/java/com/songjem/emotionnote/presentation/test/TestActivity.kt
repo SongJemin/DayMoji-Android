@@ -20,7 +20,7 @@ class TestActivity : BaseActivity<ActivityTestBinding>(R.layout.activity_test) {
     }
 
     private fun setObserve() {
-        viewModel.testVal.observe(this@TestActivity, Observer { testData ->
+        viewModel.emotionReportListData.observe(this@TestActivity, Observer { testData ->
             binding.tvTestResult.text = testData
         })
     }

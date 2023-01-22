@@ -12,6 +12,7 @@ import com.songjem.emotionnote.databinding.ActivityMainBinding
 import com.songjem.emotionnote.presentation.main.calendar.CalendarFragment
 import com.songjem.emotionnote.presentation.main.dashboard.DashboardFragment
 import com.songjem.emotionnote.presentation.main.record.RecordActivity
+import com.songjem.emotionnote.presentation.test.TestActivity
 
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var calendarFragment: CalendarFragment
@@ -27,6 +28,11 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         dashboardFragment = DashboardFragment()
 
         supportFragmentManager.beginTransaction().replace(R.id.fl_container_main, calendarFragment).commit()
+
+        binding.btnTestpageMain.setOnClickListener {
+            val intent = Intent(this, TestActivity::class.java)
+            startActivity(intent)
+        }
 
         val bottomNavigationView = findViewById<NavigationBarView>(R.id.bn_navigator_main)
         bottomNavigationView.setOnItemSelectedListener (

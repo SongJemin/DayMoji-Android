@@ -2,15 +2,17 @@ package com.songjem.data.repository
 
 import android.util.Log
 import com.songjem.data.datasource.local.model.EmotionReport
-import com.songjem.data.mapper.mapperToTest
+import com.songjem.data.mapper.emotion.mapperToTest
 import com.songjem.data.repository.local.LocalEmotionDataSource
 import com.songjem.data.repository.remote.test.RemoteTestDataSource
+import com.songjem.data.util.DateUtil
+import com.songjem.data.util.DateUtil.dateToString
 import com.songjem.domain.model.EmotionReportItem
-import com.songjem.domain.model.TestItem
 import com.songjem.domain.repository.EmotionRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
+import java.util.*
 import javax.inject.Inject
 
 class EmotionRepositoryImpl @Inject constructor(
@@ -18,7 +20,7 @@ class EmotionRepositoryImpl @Inject constructor(
     private val remoteTestDataSource: RemoteTestDataSource
 ) : EmotionRepository {
 
-    override fun getAllTestData(): Flowable<List<TestItem>> {
+    override fun getAllTestData(): Flowable<List<EmotionReportItem>> {
         return localEmotionDataSource.getAllEmotionReport()
             .onErrorReturn { listOf() }
             .flatMapPublisher { datas ->
@@ -35,7 +37,7 @@ class EmotionRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getAllEmotionReport(): Flowable<List<TestItem>> {
+    override fun getAllEmotionReport(): Flowable<List<EmotionReportItem>> {
         return localEmotionDataSource.getAllEmotionReport()
             .onErrorReturn { listOf() }
             .flatMapPublisher { localDatas ->
@@ -49,7 +51,7 @@ class EmotionRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getRemoteTestDatas(): Single<List<TestItem>> {
+    override fun getRemoteTestDatas(): Single<List<EmotionReportItem>> {
         return remoteTestDataSource.getRemoteAllTestData()
             .flatMap {
                 localEmotionDataSource.insertEmotionReports(it.testDatas!!)
@@ -58,12 +60,12 @@ class EmotionRepositoryImpl @Inject constructor(
     }
 
     override fun insertLocalData(emotionReportItem: EmotionReportItem): Completable {
-        Log.d("songjem", "insertEmotionReport, targetDate = " + testItem.id + ", val = " + testItem.testVal)
-        val testData = EmotionReport(emotionReportItem.index, emotionReportItem.targetDate, emotionReportItem.reportContent,
-        emotionReportItem.positive, emotionReportItem.negative, emotionReportItem.neutral)
-//        val insertResult = localTestDataSource.insertLocalTestData(testData)
-//        Log.d("songjem", "insertResult = $insertResult")
-        return localEmotionDataSource.insertEmotionReport(testData)
+        Log.d("songjem", "insertEmotionReport = $emotionReportItem")
+        val currentDateTime = DateUtil.currentDate().dateToString("yyyy.MM.dd kk:mm:ss E", Locale("ko", "KR"))
+        val emotionReport = EmotionReport(emotionReportItem.index, emotionReportItem.targetDate, emotionReportItem.reportContent
+            , emotionReportItem.emotionStatus, emotionReportItem.positive, emotionReportItem.negative, emotionReportItem.neutral, null, null
+            , currentDateTime, currentDateTime)
+        return localEmotionDataSource.insertEmotionReport(emotionReport)
     }
 
     override fun deleteAllLocalData(): Completable {

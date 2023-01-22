@@ -11,51 +11,30 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".presentation.test.TestActivity">
-
-        <EditText
-            android:id="@+id/et_test_test"
-            android:layout_width="200dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="100dp"
-            android:layout_marginStart="50dp"
-            android:hint="테스트 입력칸"
-            />
-
-        <Button
-            android:id="@+id/btn_test_insert_test"
-            android:layout_width="100dp"
-            android:layout_height="0dp"
-            app:layout_constraintLeft_toRightOf="@+id/et_test_test"
-            app:layout_constraintTop_toTopOf="@+id/et_test_test"
-            app:layout_constraintBottom_toBottomOf="@+id/et_test_test"
-            android:layout_marginStart="20dp"
-            android:text="저장"
-            android:onClick="@{() -> viewModel.insertTestData(etTestTest.getText().toString())}"
-            />
+        tools:context=".presentation.test.TestActivity"
+        android:paddingHorizontal="20dp"
+        >
 
         <Button
             android:id="@+id/btn_test_load_test"
             android:layout_width="100dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/btn_test_insert_test"
-            app:layout_constraintTop_toBottomOf="@+id/btn_test_insert_test"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             android:layout_marginTop="20dp"
             android:text="불러오기"
-            android:onClick="@{() -> viewModel.getTestLocalDatas()}"
+            android:onClick="@{() -> viewModel.getEmotionReportList()}"
             />
 
         <Button
             android:id="@+id/btn_test_delete_test"
             android:layout_width="100dp"
             android:layout_height="0dp"
-            app:layout_constraintStart_toStartOf="@+id/btn_test_insert_test"
+            app:layout_constraintStart_toStartOf="@+id/btn_test_load_test"
             app:layout_constraintTop_toBottomOf="@+id/btn_test_load_test"
             android:layout_marginTop="20dp"
             android:text="전체 삭제"
-            android:onClick="@{() -> viewModel.deleteAllTestData()}"
+            android:onClick="@{() -> viewModel.deleteAllEmotionReport()}"
             />
 
         <TextView
@@ -63,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="데이터 이력"
-            app:layout_constraintTop_toBottomOf="@+id/et_test_test"
+            app:layout_constraintTop_toBottomOf="@+id/btn_test_delete_test"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginTop="250dp"
