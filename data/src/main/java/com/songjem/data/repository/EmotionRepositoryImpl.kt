@@ -1,24 +1,25 @@
 package com.songjem.data.repository
 
 import android.util.Log
-import com.songjem.data.datasource.local.model.TestEntity
+import com.songjem.data.datasource.local.model.EmotionReport
 import com.songjem.data.mapper.mapperToTest
-import com.songjem.data.repository.local.LocalTestDataSource
+import com.songjem.data.repository.local.LocalEmotionDataSource
 import com.songjem.data.repository.remote.test.RemoteTestDataSource
+import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.model.TestItem
-import com.songjem.domain.repository.TestRepository
+import com.songjem.domain.repository.EmotionRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 import javax.inject.Inject
 
-class TestRepositoryImpl @Inject constructor(
-    private val localTestDataSource: LocalTestDataSource,
+class EmotionRepositoryImpl @Inject constructor(
+    private val localEmotionDataSource: LocalEmotionDataSource,
     private val remoteTestDataSource: RemoteTestDataSource
-) : TestRepository {
+) : EmotionRepository {
 
     override fun getAllTestData(): Flowable<List<TestItem>> {
-        return localTestDataSource.getLocalAllTestData()
+        return localEmotionDataSource.getAllEmotionReport()
             .onErrorReturn { listOf() }
             .flatMapPublisher { datas ->
                 if(datas.isEmpty()) {
@@ -34,8 +35,8 @@ class TestRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getLocalTestDatas(): Flowable<List<TestItem>> {
-        return localTestDataSource.getLocalAllTestData()
+    override fun getAllEmotionReport(): Flowable<List<TestItem>> {
+        return localEmotionDataSource.getAllEmotionReport()
             .onErrorReturn { listOf() }
             .flatMapPublisher { localDatas ->
                 Log.d("songjem", "localDatas = $localDatas")
@@ -51,21 +52,22 @@ class TestRepositoryImpl @Inject constructor(
     override fun getRemoteTestDatas(): Single<List<TestItem>> {
         return remoteTestDataSource.getRemoteAllTestData()
             .flatMap {
-                localTestDataSource.insertLocalTestDatas(it.testDatas!!)
+                localEmotionDataSource.insertEmotionReports(it.testDatas!!)
                     .andThen(Single.just(mapperToTest(it.testDatas)))
             }
     }
 
-    override fun insertLocalData(testItem: TestItem): Completable {
-        Log.d("songjem", "Insert testItem id = " + testItem.id + ", val = " + testItem.testVal)
-        val testData = TestEntity(testItem.id, testItem.testVal)
+    override fun insertLocalData(emotionReportItem: EmotionReportItem): Completable {
+        Log.d("songjem", "insertEmotionReport, targetDate = " + testItem.id + ", val = " + testItem.testVal)
+        val testData = EmotionReport(emotionReportItem.index, emotionReportItem.targetDate, emotionReportItem.reportContent,
+        emotionReportItem.positive, emotionReportItem.negative, emotionReportItem.neutral)
 //        val insertResult = localTestDataSource.insertLocalTestData(testData)
 //        Log.d("songjem", "insertResult = $insertResult")
-        return localTestDataSource.insertLocalTestData(testData)
+        return localEmotionDataSource.insertEmotionReport(testData)
     }
 
     override fun deleteAllLocalData(): Completable {
-        Log.d("songjem", "deleteAllLocalData")
-        return localTestDataSource.deleteAllTestDatas()
+        Log.d("songjem", "deleteAllEmotionReport")
+        return localEmotionDataSource.deleteAllEmotionReport()
     }
 }

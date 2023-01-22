@@ -5,11 +5,11 @@ import io.reactivex.Completable
 import io.reactivex.Flowable
 import io.reactivex.Single
 
-interface TestRepository {
+interface EmotionRepository {
     fun getAllTestData(
     ) : Flowable<List<TestItem>>
 
-    fun getLocalTestDatas(
+    fun getAllEmotionReport(
     ) : Flowable<List<TestItem>>
 
     fun getRemoteTestDatas(
