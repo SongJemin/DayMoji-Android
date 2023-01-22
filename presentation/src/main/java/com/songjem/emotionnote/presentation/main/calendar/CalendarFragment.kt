@@ -1,6 +1,8 @@
 package com.songjem.emotionnote.presentation.main.calendar
 
 import android.annotation.SuppressLint
+import android.util.Log
+import androidx.fragment.app.activityViewModels
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.songjem.domain.model.DailyEmotion
 import com.songjem.emotionnote.R
@@ -10,8 +12,12 @@ import com.songjem.emotionnote.utils.def.EmotionStatus
 import com.songjem.emotionnote.utils.def.EmotionStatus.Companion.getEmotionStatus
 import com.songjem.emotionnote.utils.calendar.*
 import com.songjem.emotionnote.utils.calendar.emotion.*
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment_calendar) {
+
+    override val viewModel : CalendarViewModel by activityViewModels()
 
     private val happyDayList : ArrayList<CalendarDay> = ArrayList()
     private val angryDayList : ArrayList<CalendarDay> = ArrayList()
@@ -75,7 +81,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             val saturdayDecorator = SaturdayDecorator()
             val todayDecorator = TodayDecorator(requireContext())
 
-            binding.cvReportCalendar.addDecorators(
+            cvReportCalendar.addDecorators(
                 dayBackgroundDecorator,
                 happyDayDecorator,
                 angryDayDecorator,
@@ -88,11 +94,15 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 todayDecorator
             )
 
-            binding.cvReportCalendar.selectedDate = CalendarDay.today()
+            cvReportCalendar.selectedDate = CalendarDay.today()
             getDailyEmotionDetail(CalendarDay.today())
-            binding.cvReportCalendar.setOnDateChangedListener { widget, date, selected ->
+            cvReportCalendar.setOnDateChangedListener { widget, date, selected ->
                 getDailyEmotionDetail(date)
             }
+        }
+
+        viewModel.emotionReportListData.observe(this) { datas ->
+            Log.d("songjem", "Load EmotionReport Data = $datas")
         }
     }
 

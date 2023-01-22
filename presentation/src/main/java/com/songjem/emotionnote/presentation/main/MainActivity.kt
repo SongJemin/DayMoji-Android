@@ -13,7 +13,9 @@ import com.songjem.emotionnote.presentation.main.calendar.CalendarFragment
 import com.songjem.emotionnote.presentation.main.dashboard.DashboardFragment
 import com.songjem.emotionnote.presentation.main.record.RecordActivity
 import com.songjem.emotionnote.presentation.test.TestActivity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
     private lateinit var calendarFragment: CalendarFragment
     private lateinit var dashboardFragment: DashboardFragment

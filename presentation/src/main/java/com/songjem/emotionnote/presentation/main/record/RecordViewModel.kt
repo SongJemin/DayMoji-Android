@@ -39,8 +39,8 @@ class RecordViewModel @Inject constructor(
     private var _dailyEmotion = MutableLiveData<DailyEmotion>()
     val dailyEmotion : LiveData<DailyEmotion> get() = _dailyEmotion
 
-    private var _emotionReportListData = MutableLiveData<String>()
-    val emotionReportListData : LiveData<String> get() = _emotionReportListData
+    private var _insertReportResult = MutableLiveData<Boolean>()
+    val insertReportResult : LiveData<Boolean> get() = _insertReportResult
 
     init {
         initVoiceRecord()
@@ -53,6 +53,7 @@ class RecordViewModel @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({
                 Log.d("songjem", "insertEmotionReport")
+                _insertReportResult.value = true
             }, {
                 Log.d("songjem", "insertEmotionReport throwable, msg = " + it.message)
             })

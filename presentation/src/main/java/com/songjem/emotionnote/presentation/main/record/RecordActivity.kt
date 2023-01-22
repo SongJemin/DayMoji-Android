@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
 import com.songjem.data.util.DateUtil
@@ -38,6 +39,11 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
 
         viewModel.voiceRecordContent.observe(this) { recordContent ->
             binding.etDailyEmotionRecord.setText(recordContent)
+        }
+
+        viewModel.insertReportResult.observe(this) { insertResult ->
+            Log.d("songjem", "insertResult = $insertResult")
+            Toast.makeText(this, "분석된 감정이 등록이 되었습니다", Toast.LENGTH_SHORT).show()
         }
     }
 
