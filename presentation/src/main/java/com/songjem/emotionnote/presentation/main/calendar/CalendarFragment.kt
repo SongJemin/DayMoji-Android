@@ -102,7 +102,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         }
 
         viewModel.emotionReportListData.observe(this) { datas ->
-            Log.d("songjem", "Load EmotionReport Data = $datas")
+            Log.d("songjem", "Load EmotionReport Datas = $datas")
+        }
+
+        viewModel.emotionReport.observe(this) { report ->
+            Log.d("songjem", "Load EmotionReport One Data = $report")
         }
     }
 

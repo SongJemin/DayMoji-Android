@@ -11,8 +11,8 @@ interface EmotionDao {
     @Query("SELECT * FROM EmotionReport")
     fun getAllEmotionReport() : Single<List<EmotionReport>>
 
-    @Query("SELECT * FROM EmotionReport WHERE targetDate LIKE :targetDate")
-    fun getEmotionReportDetail(targetDate: String): EmotionReport
+    @Query("SELECT * FROM EmotionReport WHERE targetDate = :targetDate")
+    fun getEmotionReportDetail(targetDate: String): Single<EmotionReport>
 
     @Insert
     fun insertEmotionReports(emotionReports: List<EmotionReport>) : Completable

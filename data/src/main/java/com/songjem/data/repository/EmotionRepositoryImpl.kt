@@ -2,7 +2,8 @@ package com.songjem.data.repository
 
 import android.util.Log
 import com.songjem.data.datasource.local.model.EmotionReport
-import com.songjem.data.mapper.emotion.mapperToTest
+import com.songjem.data.mapper.emotion.mapperToEmotion
+import com.songjem.data.mapper.emotion.mapperToEmotionList
 import com.songjem.data.repository.local.LocalEmotionDataSource
 import com.songjem.data.repository.remote.test.RemoteTestDataSource
 import com.songjem.data.util.DateUtil
@@ -29,7 +30,7 @@ class EmotionRepositoryImpl @Inject constructor(
                         .toFlowable()
                         .onErrorReturn { listOf() }
                 } else {
-                    val localData = Single.just(mapperToTest(datas))
+                    val localData = Single.just(mapperToEmotionList(datas))
                     val remoteData = getRemoteTestDatas()
                         .onErrorResumeNext { localData }
                     Single.concat(localData, remoteData)
@@ -42,7 +43,7 @@ class EmotionRepositoryImpl @Inject constructor(
             .onErrorReturn { listOf() }
             .flatMapPublisher { localDatas ->
                 Log.d("songjem", "localDatas = $localDatas")
-                Flowable.just(mapperToTest(localDatas))
+                Flowable.just(mapperToEmotionList(localDatas))
 //                if(localDatas.isEmpty()) {
 //                    Flowable.error(java.lang.IllegalStateException("LocalData is Empty"))
 //                } else {
@@ -51,18 +52,30 @@ class EmotionRepositoryImpl @Inject constructor(
             }
     }
 
+    override fun getEmotionReportDetail(targetDate: String): Flowable<EmotionReportItem?>? {
+        Log.d("songjem", "targetDate = " + targetDate)
+        return localEmotionDataSource.getEmotionReportDetail(targetDate)
+            .onErrorReturn { error ->
+                Log.e("songjem", "getEmotionReportDetail on Error Return, error = " + error.message)
+                throw null!!
+            }.flatMapPublisher {
+                Log.d("songjem", "emotionReport = $it")
+                Flowable.just(mapperToEmotion(it))
+            }
+    }
+
     override fun getRemoteTestDatas(): Single<List<EmotionReportItem>> {
         return remoteTestDataSource.getRemoteAllTestData()
             .flatMap {
                 localEmotionDataSource.insertEmotionReports(it.testDatas!!)
-                    .andThen(Single.just(mapperToTest(it.testDatas)))
+                    .andThen(Single.just(mapperToEmotionList(it.testDatas)))
             }
     }
 
     override fun insertLocalData(emotionReportItem: EmotionReportItem): Completable {
         Log.d("songjem", "insertEmotionReport = $emotionReportItem")
         val currentDateTime = DateUtil.currentDate().dateToString("yyyy.MM.dd kk:mm:ss E", Locale("ko", "KR"))
-        val emotionReport = EmotionReport(emotionReportItem.index, emotionReportItem.targetDate, emotionReportItem.reportContent
+        val emotionReport = EmotionReport(emotionReportItem.targetDate, emotionReportItem.reportContent
             , emotionReportItem.emotionStatus, emotionReportItem.positive, emotionReportItem.negative, emotionReportItem.neutral, null, null
             , currentDateTime, currentDateTime)
         return localEmotionDataSource.insertEmotionReport(emotionReport)

@@ -50,7 +50,7 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
     private fun setButtonClick() {
         binding.btnSaveAnalysisRecord.setOnClickListener {
 //            val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
-            val currentDate = binding.tvCurrentDateResultRecord.text.toString()
+            val currentDate = binding.tvCurrentDateResultRecord.text.toString().replace(" ", "").replace(".", "")
             val reportContent = binding.etDailyEmotionRecord.text.toString()
             val emotionStatus = binding.tvEmotionStatusResultRecord.text.toString()
             val positive = binding.tvEmotionPositiveResultRecord.text.toString().toFloat()

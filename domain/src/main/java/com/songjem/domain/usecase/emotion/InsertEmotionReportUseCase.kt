@@ -1,4 +1,4 @@
-package com.songjem.domain.usecase.test
+package com.songjem.domain.usecase.emotion
 
 import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.repository.EmotionRepository

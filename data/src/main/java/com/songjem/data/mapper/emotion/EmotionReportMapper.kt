@@ -3,10 +3,9 @@ package com.songjem.data.mapper.emotion
 import com.songjem.data.datasource.local.model.EmotionReport
 import com.songjem.domain.model.EmotionReportItem
 
-fun mapperToTest(emotionReportEntities: List<EmotionReport>): List<EmotionReportItem> {
+fun mapperToEmotionList(emotionReportEntities: List<EmotionReport>): List<EmotionReportItem> {
     return emotionReportEntities.toList().map {
         EmotionReportItem(
-            it.index,
             it.targetDate,
             it.reportContent,
             it.emotionStatus,
@@ -19,4 +18,20 @@ fun mapperToTest(emotionReportEntities: List<EmotionReport>): List<EmotionReport
             it.lastReportDate
         )
     }
+}
+
+fun mapperToEmotion(emotionReportEntity: EmotionReport): EmotionReportItem {
+    val emotionReport = EmotionReportItem(
+        emotionReportEntity.targetDate,
+        emotionReportEntity.reportContent,
+        emotionReportEntity.emotionStatus,
+        emotionReportEntity.positive,
+        emotionReportEntity.negative,
+        emotionReportEntity.neutral,
+        emotionReportEntity.score,
+        emotionReportEntity.magnitude,
+        emotionReportEntity.firstReportDate,
+        emotionReportEntity.lastReportDate
+    )
+    return emotionReport
 }

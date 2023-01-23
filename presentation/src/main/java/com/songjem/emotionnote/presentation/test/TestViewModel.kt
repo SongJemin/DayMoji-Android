@@ -5,6 +5,8 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.songjem.domain.usecase.*
+import com.songjem.domain.usecase.emotion.DeleteAllEmotionReportUseCase
+import com.songjem.domain.usecase.emotion.GetEmotionReportsUseCase
 import com.songjem.domain.usecase.test.*
 import com.songjem.emotionnote.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

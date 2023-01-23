@@ -12,6 +12,10 @@ interface EmotionRepository {
     fun getAllEmotionReport(
     ) : Flowable<List<EmotionReportItem>>
 
+    fun getEmotionReportDetail(
+        targetDate : String
+    ) : Flowable<EmotionReportItem?>?
+
     fun getRemoteTestDatas(
     ) : Single<List<EmotionReportItem>>
 

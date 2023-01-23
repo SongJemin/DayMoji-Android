@@ -14,6 +14,7 @@ import com.songjem.domain.model.DailyEmotion
 import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.model.SentimentAnalysisItem
 import com.songjem.domain.usecase.analysis.SentimentAnalysisUseCase
+import com.songjem.domain.usecase.emotion.InsertEmotionReportUseCase
 import com.songjem.domain.usecase.test.*
 import com.songjem.emotionnote.base.BaseViewModel
 import com.songjem.emotionnote.di.BaseApplication
@@ -26,7 +27,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RecordViewModel @Inject constructor(
     private val sentimentAnalysisUseCase: SentimentAnalysisUseCase,
-    private val insertEmotionReportUseCase: InsertEmotionReportUseCase)
+    private val insertEmotionReportUseCase: InsertEmotionReportUseCase
+)
     : BaseViewModel() {
 
     private lateinit var speechRecognizer: SpeechRecognizer

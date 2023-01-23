@@ -1,7 +1,6 @@
 package com.songjem.domain.model
 
 data class EmotionReportItem (
-    val index : Int? = null,
     val targetDate : String,
     val reportContent : String,
     val emotionStatus : String,

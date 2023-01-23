@@ -6,8 +6,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "EmotionReport")
 data class EmotionReport (
-    @PrimaryKey(autoGenerate = true) val index : Int? = null,
-    @ColumnInfo(name = "targetDate") val targetDate : String,
+    @PrimaryKey @ColumnInfo(name = "targetDate") val targetDate : String,
     @ColumnInfo(name = "reportContent") val reportContent : String,
     @ColumnInfo(name = "emotionStatus") val emotionStatus : String,
     @ColumnInfo(name = "positive") val positive : Float? = null,

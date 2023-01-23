@@ -11,6 +11,8 @@ class LocalEmotionDataSourceImpl @Inject constructor(private val emotionDao: Emo
 
     override fun getAllEmotionReport(): Single<List<EmotionReport>> = emotionDao.getAllEmotionReport()
 
+    override fun getEmotionReportDetail(targetDate: String): Single<EmotionReport> = emotionDao.getEmotionReportDetail(targetDate)
+
     override fun insertEmotionReports(emotionReports: List<EmotionReport>): Completable = emotionDao.insertEmotionReports(emotionReports)
 
     override fun insertEmotionReport(emotionReport: EmotionReport): Completable = emotionDao.insertEmotionReport(emotionReport)
