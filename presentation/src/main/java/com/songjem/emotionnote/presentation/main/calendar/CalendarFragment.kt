@@ -28,7 +28,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private val loveDayList : ArrayList<CalendarDay> = ArrayList()
 
     private val reportDayEmotionMap = HashMap<CalendarDay, DailyEmotion>()
-    private val tempEmotions = listOf<String>("행복함", "화남", "슬픔", "살짝슬픔", "그저그럼", "사랑스러움")
+    private val tempEmotions = listOf<String>("즐거움", "화남", "슬픔", "살짝슬픔", "그저그럼", "행복함")
     private val tempPositiveLevels = listOf<Float>(0.73f, 0.01f, 0.33f, 0.41f, 0.52f, 0.99f)
     private val tempNegativeLevels = listOf<Float>(0.27f, 0.99f, 0.67f, 0.59f, 0.48f, 0.01f)
     private val tempNeutralLevels = listOf<Float>(0.35f, 0.01f, 0.32f, 0.52f, 0.73f, 0.05f)
@@ -37,7 +37,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     override fun initView() {
         binding.apply {
 
-            for (i in 0..31) {
+/*            for (i in 0..31) {
                 val date = CalendarDay.from(2023, 0, i)
                 reportDayEmotionMap[CalendarDay.from(2023, 0, i)] =
                     DailyEmotion(
@@ -66,34 +66,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                     }
                     EmotionStatus.LOVE -> {
                         loveDayList.add(it.value.date)
-                    }
-                }
-            }
+                    }*/
+//                }
+//            }
 
-            val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
-            val happyDayDecorator = HappyDayDecorator(happyDayList, requireContext())
-            val angryDayDecorator = AngryDayDecorator(angryDayList, requireContext())
-            val sadDayDecorator = SadDayDecorator(sadDayList, requireContext())
-            val soSadDayDecorator = SoSadDayDecorator(soSadDayList, requireContext())
-            val sosoDayDecorator = SosoDayDecorator(sosoDayList, requireContext())
-            val loveDayDecorator = LoveDayDecorator(loveDayList, requireContext())
 
-            val sundayDecorator = SundayDecorator()
-            val saturdayDecorator = SaturdayDecorator()
-            val todayDecorator = TodayDecorator(requireContext())
-
-            cvReportCalendar.addDecorators(
-                dayBackgroundDecorator,
-                happyDayDecorator,
-                angryDayDecorator,
-                sadDayDecorator,
-                soSadDayDecorator,
-                sosoDayDecorator,
-                loveDayDecorator,
-                sundayDecorator,
-                saturdayDecorator,
-                todayDecorator
-            )
 
             cvReportCalendar.selectedDate = CalendarDay.today()
             getDailyEmotionDetail(CalendarDay.today())
@@ -102,28 +79,90 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             }
         }
 
+        viewModel.emotionMonthlyReport.observe(this) { monthlyList ->
+            monthlyList.forEach { list ->
+                val date = CalendarDay.from(list.targetDate.substring(0,4).toInt(), list.targetDate.substring(4,6).toInt()-1,
+                    list.targetDate.substring(6,8).toInt())
+                Log.d("songjem", "monthlyDate, targetDate = $date" + ", emotionStatus = " + list.emotionStatus)
+                when (getEmotionStatus(list.emotionStatus)) {
+                    EmotionStatus.HAPPY -> {
+                        Log.d("songjem", "Emotion is Happy")
+                        happyDayList.add(date)
+                    }
+                    EmotionStatus.ANGRY -> {
+                        Log.d("songjem", "Emotion is Angry")
+                        angryDayList.add(date)
+                    }
+                    EmotionStatus.SAD -> {
+                        Log.d("songjem", "Emotion is Sad")
+                        sadDayList.add(date)
+                    }
+                    EmotionStatus.SOSAD -> {
+                        Log.d("songjem", "Emotion is Sosad")
+                        soSadDayList.add(date)
+                    }
+                    EmotionStatus.SOSO -> {
+                        Log.d("songjem", "Emotion is Soso")
+                        sosoDayList.add(date)
+                    }
+                    EmotionStatus.LOVE -> {
+                        Log.d("songjem", "Emotion is Love")
+                        loveDayList.add(date)
+                    }
+                }
+            }
+            setCalendar()
+        }
+
         viewModel.emotionReportListData.observe(this) { datas ->
             Log.d("songjem", "Load EmotionReport Datas = $datas")
         }
 
         viewModel.emotionReport.observe(this) { report ->
 
-                Log.d("songjem", "Load EmotionReport One Data = $report")
-                binding.tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
-                binding.tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
-                binding.tvPositiveLevelCalendar.text = "긍정수치 : ${report.positive}"
-                binding.tvNegativeLevelCalendar.text = "부정수치 : ${report.negative}"
-                binding.tvNeutralLevelCalendar.text = "중립수치 : ${report.neutral}"
-                binding.tvReportContentCalendar.text = report.reportContent
+            Log.d("songjem", "Load EmotionReport One Data = $report")
+            binding.tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
+            binding.tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
+            binding.tvPositiveLevelCalendar.text = "긍정수치 : ${report.positive}"
+            binding.tvNegativeLevelCalendar.text = "부정수치 : ${report.negative}"
+            binding.tvNeutralLevelCalendar.text = "중립수치 : ${report.neutral}"
+            binding.tvReportContentCalendar.text = report.reportContent
         }
 
         viewModel.noDataAlarm.observe(this) {
             clearDetailContent()
         }
 
-        viewModel.errorAlarm.observe(this) {
-            Toast.makeText(context, "데이터 접근중 오류 발생", Toast.LENGTH_SHORT).show()
+        viewModel.errorAlarm.observe(this) { msg ->
+            Toast.makeText(context, "데이터 접근중 오류 발생, msg = $msg", Toast.LENGTH_SHORT).show()
         }
+    }
+
+    private fun setCalendar() {
+        val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
+        val happyDayDecorator = HappyDayDecorator(happyDayList, requireContext())
+        val angryDayDecorator = AngryDayDecorator(angryDayList, requireContext())
+        val sadDayDecorator = SadDayDecorator(sadDayList, requireContext())
+        val soSadDayDecorator = SoSadDayDecorator(soSadDayList, requireContext())
+        val sosoDayDecorator = SosoDayDecorator(sosoDayList, requireContext())
+        val loveDayDecorator = LoveDayDecorator(loveDayList, requireContext())
+
+        val sundayDecorator = SundayDecorator()
+        val saturdayDecorator = SaturdayDecorator()
+        val todayDecorator = TodayDecorator(requireContext())
+
+        binding.cvReportCalendar.addDecorators(
+            dayBackgroundDecorator,
+            happyDayDecorator,
+            angryDayDecorator,
+            sadDayDecorator,
+            soSadDayDecorator,
+            sosoDayDecorator,
+            loveDayDecorator,
+            sundayDecorator,
+            saturdayDecorator,
+            todayDecorator
+        )
     }
 
     @SuppressLint("SetTextI18n")
@@ -136,6 +175,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         viewModel.getEmotionDetail(targetDate)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun clearDetailContent() {
         binding.tvDateCalendar.text = ""
         binding.tvEmotionStatusCalendar.text = ""

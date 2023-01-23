@@ -12,6 +12,9 @@ interface EmotionDao {
     @Query("SELECT * FROM EmotionReport")
     fun getAllEmotionReport() : Single<List<EmotionReport>>
 
+    @Query("SELECT * FROM EmotionReport WHERE targetDate LIKE :targetYearMonth || '%'")
+    fun getEmotionReportMonthly(targetYearMonth : String) : Single<List<EmotionReport>>
+
     @Query("SELECT * FROM EmotionReport WHERE targetDate = :targetDate")
     fun getEmotionReportDetail(targetDate: String): Maybe<EmotionReport>
 

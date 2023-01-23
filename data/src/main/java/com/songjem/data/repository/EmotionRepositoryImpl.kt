@@ -39,6 +39,15 @@ class EmotionRepositoryImpl @Inject constructor(
             }
     }
 
+    override fun getEmotionReportMonthly(targetYearMonth: String): Single<List<EmotionReportItem>> {
+        return localEmotionDataSource.getEmotionReportMonthly(targetYearMonth)
+            .onErrorReturn { listOf() }
+            .flatMap {
+                Log.d("songjem", "emotionReportMonthly = $it")
+                Single.just(mapperToEmotionList(it))
+            }
+    }
+
     override fun getAllEmotionReport(): Flowable<List<EmotionReportItem>> {
         return localEmotionDataSource.getAllEmotionReport()
             .onErrorReturn { listOf() }

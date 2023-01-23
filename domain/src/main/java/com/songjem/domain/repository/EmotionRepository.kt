@@ -10,6 +10,10 @@ interface EmotionRepository {
     fun getAllTestData(
     ) : Flowable<List<EmotionReportItem>>
 
+    fun getEmotionReportMonthly(
+        targetYearMonth : String
+    ) : Single<List<EmotionReportItem>>
+
     fun getAllEmotionReport(
     ) : Flowable<List<EmotionReportItem>>
 

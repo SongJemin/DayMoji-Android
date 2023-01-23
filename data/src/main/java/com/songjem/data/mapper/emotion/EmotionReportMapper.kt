@@ -21,7 +21,7 @@ fun mapperToEmotionList(emotionReportEntities: List<EmotionReport>): List<Emotio
 }
 
 fun mapperToEmotion(emotionReportEntity: EmotionReport): EmotionReportItem {
-    val emotionReport = EmotionReportItem(
+    return EmotionReportItem(
         emotionReportEntity.targetDate,
         emotionReportEntity.reportContent,
         emotionReportEntity.emotionStatus,
@@ -33,5 +33,4 @@ fun mapperToEmotion(emotionReportEntity: EmotionReport): EmotionReportItem {
         emotionReportEntity.firstReportDate,
         emotionReportEntity.lastReportDate
     )
-    return emotionReport
 }

@@ -30,7 +30,15 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
     @SuppressLint("SetTextI18n")
     private fun setObserve() {
         viewModel.dailyEmotion.observe(this) { dailyEmotion ->
-            binding.tvEmotionStatusResultRecord.text = dailyEmotion.emotionStatus
+            val emotionScore = (dailyEmotion.emotionDetail.positive - dailyEmotion.emotionDetail.negative) / 2
+            val emotionStatus = if(emotionScore > 25.0) "행복함"
+            else if(emotionScore in -10.0..10.0 && dailyEmotion.emotionDetail.neutral >= 50.0) "그저그럼"
+            else if(emotionScore < 25.0 && emotionScore >= 0.0) "즐거움"
+            else if(emotionScore < 0.0 && emotionScore >= -25.0) "슬픔"
+            else if(emotionScore < -25.0 && emotionScore >= -50.0) "화남"
+            else "그저그럼"
+
+            binding.tvEmotionStatusResultRecord.text = emotionStatus
             binding.tvEmotionPositiveResultRecord.text = dailyEmotion.emotionDetail.positive.toString()
             binding.tvEmotionNegativeResultRecord.text = dailyEmotion.emotionDetail.negative.toString()
             binding.tvEmotionNeutralResultRecord.text = dailyEmotion.emotionDetail.neutral.toString()
@@ -51,18 +59,18 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         binding.btnSaveAnalysisRecord.setOnClickListener {
 //            val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
             val currentDate = binding.tvCurrentDateResultRecord.text.toString().replace(" ", "").replace(".", "")
-            val reportContent = binding.etDailyEmotionRecord.text.toString()
             val emotionStatus = binding.tvEmotionStatusResultRecord.text.toString()
+            val reportContent = binding.etDailyEmotionRecord.text.toString()
             val positive = binding.tvEmotionPositiveResultRecord.text.toString().toFloat()
             val negative = binding.tvEmotionNegativeResultRecord.text.toString().toFloat()
             val neutral = binding.tvEmotionNeutralResultRecord.text.toString().toFloat()
 
-            val testEmotionReportItem = EmotionReportItem(targetDate = currentDate, reportContent = reportContent
+            val emotionReport = EmotionReportItem(targetDate = currentDate, reportContent = reportContent
             , emotionStatus = emotionStatus, positive = positive, negative = negative
             , neutral = neutral, firstReportDate = currentDate, lastReportDate = currentDate)
 
-            Log.d("songjem", "testEmotionReportItem = $testEmotionReportItem")
-            viewModel.insertEmotionReport(testEmotionReportItem)
+            Log.d("songjem", "INSERT, emotionReportItem = $emotionReport")
+            viewModel.insertEmotionReport(emotionReport)
         }
     }
 

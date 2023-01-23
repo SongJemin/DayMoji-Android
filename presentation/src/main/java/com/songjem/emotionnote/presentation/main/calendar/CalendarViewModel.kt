@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.usecase.emotion.DeleteAllEmotionReportUseCase
 import com.songjem.domain.usecase.emotion.GetEmotionDetailUseCase
+import com.songjem.domain.usecase.emotion.GetEmotionMonthlyUseCase
 import com.songjem.domain.usecase.emotion.GetEmotionReportsUseCase
 import com.songjem.emotionnote.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -18,11 +19,15 @@ import javax.inject.Inject
 class CalendarViewModel
 @Inject constructor(
     private val getEmotionReportsUseCase: GetEmotionReportsUseCase,
-    private val getEmotionDetailUseCase : GetEmotionDetailUseCase
+    private val getEmotionDetailUseCase : GetEmotionDetailUseCase,
+    private val getEmotionMonthlyUseCase: GetEmotionMonthlyUseCase
 ) : BaseViewModel() {
 
     private var _emotionReportListData = MutableLiveData<String>()
     val emotionReportListData : LiveData<String> get() = _emotionReportListData
+
+    private var _emotionMonthlyReport = MutableLiveData<List<EmotionReportItem>>()
+    val emotionMonthlyReport : LiveData<List<EmotionReportItem>> get() = _emotionMonthlyReport
 
     private var _emotionReport = MutableLiveData<EmotionReportItem>()
     val emotionReport : LiveData<EmotionReportItem> get() = _emotionReport
@@ -34,7 +39,8 @@ class CalendarViewModel
     val errorAlarm : LiveData<String> get() = _errorAlarm
 
     init {
-        getEmotionReportList()
+//        getEmotionReportList()
+        getEmotionReportMonthly("202301")
         getEmotionDetail("20230123")
     }
 
@@ -52,6 +58,23 @@ class CalendarViewModel
                }, {
                 Log.d("songjem","getEmotionDetail Complete, No Data")
                 _noDataAlarm.value = true
+            })
+    }
+
+    @SuppressLint("CheckResult")
+    fun getEmotionReportMonthly(targetYearMonth : String) {
+        getEmotionMonthlyUseCase(targetYearMonth)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ datas ->
+                if(datas.isNotEmpty()) {
+                    Log.d("songjem", "getEmotionMonthly Success, datas = $datas")
+                    _emotionMonthlyReport.value = datas
+                } else {
+                    Log.d("songjem", "getEmotionMonthly No Data")
+                }
+            }, {
+                _errorAlarm.value = it.message
             })
     }
 
