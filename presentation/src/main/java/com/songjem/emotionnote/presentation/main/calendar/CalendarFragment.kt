@@ -36,42 +36,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     @SuppressLint("SetTextI18n")
     override fun initView() {
         binding.apply {
-
-/*            for (i in 0..31) {
-                val date = CalendarDay.from(2023, 0, i)
-                reportDayEmotionMap[CalendarDay.from(2023, 0, i)] =
-                    DailyEmotion(
-                        date,
-                        tempEmotions[i % 6],
-                        DailyEmotion.EmotionDetail(tempNegativeLevels[i % 6], tempPositiveLevels[i % 6], tempNeutralLevels[i % 6])
-                    )
-            }
-
-            reportDayEmotionMap.forEach {
-                when (getEmotionStatus(it.value.emotionStatus)) {
-                    EmotionStatus.HAPPY -> {
-                        happyDayList.add(it.value.date)
-                    }
-                    EmotionStatus.ANGRY -> {
-                        angryDayList.add(it.value.date)
-                    }
-                    EmotionStatus.SAD -> {
-                        sadDayList.add(it.value.date)
-                    }
-                    EmotionStatus.SOSAD -> {
-                        soSadDayList.add(it.value.date)
-                    }
-                    EmotionStatus.SOSO -> {
-                        sosoDayList.add(it.value.date)
-                    }
-                    EmotionStatus.LOVE -> {
-                        loveDayList.add(it.value.date)
-                    }*/
-//                }
-//            }
-
-
-
             cvReportCalendar.selectedDate = CalendarDay.today()
             getDailyEmotionDetail(CalendarDay.today())
             cvReportCalendar.setOnDateChangedListener { widget, date, selected ->
@@ -86,27 +50,21 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 Log.d("songjem", "monthlyDate, targetDate = $date" + ", emotionStatus = " + list.emotionStatus)
                 when (getEmotionStatus(list.emotionStatus)) {
                     EmotionStatus.HAPPY -> {
-                        Log.d("songjem", "Emotion is Happy")
                         happyDayList.add(date)
                     }
                     EmotionStatus.ANGRY -> {
-                        Log.d("songjem", "Emotion is Angry")
                         angryDayList.add(date)
                     }
                     EmotionStatus.SAD -> {
-                        Log.d("songjem", "Emotion is Sad")
                         sadDayList.add(date)
                     }
                     EmotionStatus.SOSAD -> {
-                        Log.d("songjem", "Emotion is Sosad")
                         soSadDayList.add(date)
                     }
                     EmotionStatus.SOSO -> {
-                        Log.d("songjem", "Emotion is Soso")
                         sosoDayList.add(date)
                     }
                     EmotionStatus.LOVE -> {
-                        Log.d("songjem", "Emotion is Love")
                         loveDayList.add(date)
                     }
                 }
@@ -119,7 +77,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         }
 
         viewModel.emotionReport.observe(this) { report ->
-
             Log.d("songjem", "Load EmotionReport One Data = $report")
             binding.tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
             binding.tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
