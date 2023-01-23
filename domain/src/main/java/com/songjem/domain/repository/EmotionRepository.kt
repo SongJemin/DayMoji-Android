@@ -3,6 +3,7 @@ package com.songjem.domain.repository
 import com.songjem.domain.model.EmotionReportItem
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 interface EmotionRepository {
@@ -14,7 +15,7 @@ interface EmotionRepository {
 
     fun getEmotionReportDetail(
         targetDate : String
-    ) : Flowable<EmotionReportItem?>?
+    ) : Maybe<EmotionReportItem>
 
     fun getRemoteTestDatas(
     ) : Single<List<EmotionReportItem>>

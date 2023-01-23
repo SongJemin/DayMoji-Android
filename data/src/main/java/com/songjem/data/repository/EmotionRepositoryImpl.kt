@@ -12,6 +12,7 @@ import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.repository.EmotionRepository
 import io.reactivex.Completable
 import io.reactivex.Flowable
+import io.reactivex.Maybe
 import io.reactivex.Single
 import java.util.*
 import javax.inject.Inject
@@ -52,15 +53,12 @@ class EmotionRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getEmotionReportDetail(targetDate: String): Flowable<EmotionReportItem?>? {
-        Log.d("songjem", "targetDate = " + targetDate)
+    override fun getEmotionReportDetail(targetDate: String): Maybe<EmotionReportItem> {
+        Log.d("songjem", "targetDate = $targetDate")
         return localEmotionDataSource.getEmotionReportDetail(targetDate)
-            .onErrorReturn { error ->
-                Log.e("songjem", "getEmotionReportDetail on Error Return, error = " + error.message)
-                throw null!!
-            }.flatMapPublisher {
+            .flatMap {
                 Log.d("songjem", "emotionReport = $it")
-                Flowable.just(mapperToEmotion(it))
+                Maybe.just(mapperToEmotion(it))
             }
     }
 

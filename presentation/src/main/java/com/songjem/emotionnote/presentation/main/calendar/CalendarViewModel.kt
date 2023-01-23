@@ -27,23 +27,31 @@ class CalendarViewModel
     private var _emotionReport = MutableLiveData<EmotionReportItem>()
     val emotionReport : LiveData<EmotionReportItem> get() = _emotionReport
 
+    private var _noDataAlarm = MutableLiveData<Boolean>()
+    val noDataAlarm : LiveData<Boolean> get() = _noDataAlarm
+
+    private var _errorAlarm = MutableLiveData<String>()
+    val errorAlarm : LiveData<String> get() = _errorAlarm
+
     init {
         getEmotionReportList()
         getEmotionDetail("20230123")
     }
 
+    @SuppressLint("CheckResult")
     fun getEmotionDetail(targetDate : String) {
         getEmotionDetailUseCase(targetDate)
-            ?.subscribeOn(Schedulers.io())
-            ?.observeOn(AndroidSchedulers.mainThread())
-            ?.subscribe({ data ->
-                if (data != null) {
-                    _emotionReport.value = data
-                } else {
-                    Log.d("songjem", "No Report Data")
-                }
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ data ->
+                Log.d("songjem", "getEmotionDetail Success, report = $data")
+                _emotionReport.value = data
             }, {
                 Log.e("songjem", "getEmotionDetail Error, msg = " + it.message)
+                _errorAlarm.value = it.message
+               }, {
+                Log.d("songjem","getEmotionDetail Complete, No Data")
+                _noDataAlarm.value = true
             })
     }
 
@@ -54,12 +62,12 @@ class CalendarViewModel
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ datas ->
                 if (datas.isEmpty()) {
-                    _emotionReportListData.value = "No Data"
+                    _noDataAlarm.value = true
                 } else {
                     _emotionReportListData.value = datas.toString()
                 }
             }, {
-                _emotionReportListData.value = "Error"
+                _errorAlarm.value = it.message
             })
     }
 }

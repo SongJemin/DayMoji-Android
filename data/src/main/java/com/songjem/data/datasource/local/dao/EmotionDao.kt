@@ -3,6 +3,7 @@ package com.songjem.data.datasource.local.dao
 import androidx.room.*
 import com.songjem.data.datasource.local.model.EmotionReport
 import io.reactivex.Completable
+import io.reactivex.Maybe
 import io.reactivex.Single
 
 @Dao
@@ -12,7 +13,7 @@ interface EmotionDao {
     fun getAllEmotionReport() : Single<List<EmotionReport>>
 
     @Query("SELECT * FROM EmotionReport WHERE targetDate = :targetDate")
-    fun getEmotionReportDetail(targetDate: String): Single<EmotionReport>
+    fun getEmotionReportDetail(targetDate: String): Maybe<EmotionReport>
 
     @Insert
     fun insertEmotionReports(emotionReports: List<EmotionReport>) : Completable

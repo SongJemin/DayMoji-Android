@@ -2,6 +2,7 @@ package com.songjem.emotionnote.presentation.main.calendar
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.songjem.domain.model.DailyEmotion
@@ -106,28 +107,41 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         }
 
         viewModel.emotionReport.observe(this) { report ->
-            Log.d("songjem", "Load EmotionReport One Data = $report")
+
+                Log.d("songjem", "Load EmotionReport One Data = $report")
+                binding.tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
+                binding.tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
+                binding.tvPositiveLevelCalendar.text = "긍정수치 : ${report.positive}"
+                binding.tvNegativeLevelCalendar.text = "부정수치 : ${report.negative}"
+                binding.tvNeutralLevelCalendar.text = "중립수치 : ${report.neutral}"
+                binding.tvReportContentCalendar.text = report.reportContent
+        }
+
+        viewModel.noDataAlarm.observe(this) {
+            clearDetailContent()
+        }
+
+        viewModel.errorAlarm.observe(this) {
+            Toast.makeText(context, "데이터 접근중 오류 발생", Toast.LENGTH_SHORT).show()
         }
     }
 
     @SuppressLint("SetTextI18n")
     private fun getDailyEmotionDetail(date: CalendarDay) {
-        binding.tvDateCalendar.text =
-            date.year.toString() + ". " + (date.month + 1) + ". " + date.day
+        val year = date.year.toString()
+        val month = if((date.month + 1) <= 9) "0" + (date.month+1) else (date.month+1).toString()
+        val day = date.day.toString()
+        val targetDate = year + month + day
 
-        val emotionStatus = reportDayEmotionMap[date]?.emotionStatus
-        val positiveLevel = reportDayEmotionMap[date]?.emotionDetail?.positive
-        val negativeLevel = reportDayEmotionMap[date]?.emotionDetail?.negative
-        val neutralLevel = reportDayEmotionMap[date]?.emotionDetail?.neutral
+        viewModel.getEmotionDetail(targetDate)
+    }
 
-        binding.tvEmotionStatusCalendar.text = "감정상태 : $emotionStatus"
-        binding.tvPositiveLevelCalendar.text = "긍정수치 : $positiveLevel"
-        binding.tvNegativeLevelCalendar.text = "부정수치 : $negativeLevel"
-        binding.tvNeutralLevelCalendar.text = "중립수치 : $neutralLevel"
-
-        if(date == CalendarDay.today()) {
-            val tempReportContent = "오늘부터 연휴 시작이지만 개발 공부할 생각하니 맘이 심숭생숭하다ㅠㅠ"
-            binding.tvReportContentCalendar.text = tempReportContent
-        }
+    private fun clearDetailContent() {
+        binding.tvDateCalendar.text = ""
+        binding.tvEmotionStatusCalendar.text = ""
+        binding.tvPositiveLevelCalendar.text = ""
+        binding.tvNegativeLevelCalendar.text = ""
+        binding.tvNeutralLevelCalendar.text = ""
+        binding.tvReportContentCalendar.text = "No Data"
     }
 }
