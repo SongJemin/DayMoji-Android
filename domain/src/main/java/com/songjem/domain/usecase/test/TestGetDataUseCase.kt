@@ -1,12 +1,12 @@
 package com.songjem.domain.usecase.test
 
-import com.songjem.domain.model.TestItem
-import com.songjem.domain.repository.TestRepository
+import com.songjem.domain.model.EmotionReportItem
+import com.songjem.domain.repository.EmotionRepository
 import io.reactivex.Flowable
 import javax.inject.Inject
 
 class TestGetDataUseCase
-@Inject constructor(private val testRepository: TestRepository) {
+@Inject constructor(private val emotionRepository: EmotionRepository) {
     operator fun invoke(
-    ) : Flowable<List<TestItem>> = testRepository.getAllTestData()
+    ) : Flowable<List<EmotionReportItem>> = emotionRepository.getAllTestData()
 }

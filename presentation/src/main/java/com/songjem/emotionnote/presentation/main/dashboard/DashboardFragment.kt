@@ -1,6 +1,7 @@
 package com.songjem.emotionnote.presentation.main.dashboard
 
 import android.graphics.Color
+import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
@@ -12,9 +13,12 @@ import com.songjem.emotionnote.R
 import com.songjem.emotionnote.base.BaseFragment
 import com.songjem.emotionnote.databinding.FragmentDashboardBinding
 import com.songjem.emotionnote.utils.chart.MyMarkerView
+import dagger.hilt.android.AndroidEntryPoint
 
-
+@AndroidEntryPoint
 class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragment_dashboard) {
+
+    override val viewModel : DashboardViewModel by activityViewModels()
 
     override fun initView() {
         binding.apply {

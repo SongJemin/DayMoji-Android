@@ -1,12 +1,13 @@
-package com.songjem.domain.usecase.test
+package com.songjem.domain.usecase.emotion
 
 import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.repository.EmotionRepository
-import io.reactivex.Single
+import io.reactivex.Completable
 import javax.inject.Inject
 
-class TestGetRemoteDataUseCase
+class InsertEmotionReportUseCase
 @Inject constructor(private val emotionRepository: EmotionRepository) {
     operator fun invoke(
-    ) : Single<List<EmotionReportItem>> = emotionRepository.getRemoteTestDatas()
+        emotionReportItem: EmotionReportItem
+    ) : Completable = emotionRepository.insertLocalData(emotionReportItem)
 }

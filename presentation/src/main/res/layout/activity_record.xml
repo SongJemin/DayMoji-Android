@@ -65,8 +65,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/btn_sentiment_analysis_record"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
             android:layout_marginTop="20dp"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -74,16 +73,39 @@
             />
 
         <TextView
+            android:id="@+id/tv_emotion_status_result_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/tv_emotion_status_record"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_emotion_status_record"
+            app:layout_constraintStart_toEndOf="@+id/tv_emotion_status_record"
+            android:textSize="17sp"
+            android:text="즐거움"
+            android:layout_marginStart="10dp"
+            />
+
+        <TextView
             android:id="@+id/tv_emotion_positive_level_record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/tv_emotion_status_record"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
             android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="긍정수치 : "
+            />
+
+        <TextView
+            android:id="@+id/tv_emotion_positive_result_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/tv_emotion_positive_level_record"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_emotion_positive_level_record"
+            app:layout_constraintStart_toEndOf="@+id/tv_emotion_positive_level_record"
+            android:textSize="17sp"
+            android:text="0.9"
+            android:layout_marginStart="10dp"
             />
 
         <TextView
@@ -91,8 +113,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/tv_emotion_positive_level_record"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
             android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
@@ -100,28 +121,63 @@
             />
 
         <TextView
+            android:id="@+id/tv_emotion_negative_result_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/tv_emotion_negative_level_record"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_emotion_negative_level_record"
+            app:layout_constraintStart_toEndOf="@+id/tv_emotion_negative_level_record"
+            android:textSize="17sp"
+            android:text="0.1"
+            android:layout_marginStart="10dp"
+            />
+
+        <TextView
             android:id="@+id/tv_emotion_neutral_level_record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/tv_emotion_negative_level_record"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
             android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:text="긍정수치 : "
+            android:text="중립수치 : "
             />
+
+        <TextView
+            android:id="@+id/tv_emotion_neutral_result_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/tv_emotion_neutral_level_record"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_emotion_neutral_level_record"
+            app:layout_constraintStart_toEndOf="@+id/tv_emotion_neutral_level_record"
+            android:textSize="17sp"
+            android:text="0.5"
+            android:layout_marginStart="10dp"
+            />
+
         <TextView
             android:id="@+id/tv_current_date_record"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toBottomOf="@+id/tv_emotion_neutral_level_record"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/btn_record_emotion_record"
             android:layout_marginTop="10dp"
             android:textSize="20sp"
             android:textStyle="bold"
             android:text="오늘날짜 : "
+            />
+
+        <TextView
+            android:id="@+id/tv_current_date_result_record"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@+id/tv_current_date_record"
+            app:layout_constraintBottom_toBottomOf="@+id/tv_current_date_record"
+            app:layout_constraintStart_toEndOf="@+id/tv_current_date_record"
+            android:textSize="17sp"
+            android:text="2023. 1. 22"
+            android:layout_marginStart="10dp"
             />
 
         <Button
@@ -133,7 +189,6 @@
             app:layout_constraintEnd_toEndOf="@+id/btn_record_emotion_record"
             android:text="@string/record_save_analysis"
             android:layout_marginTop="20dp"
-            android:onClick="@{() -> viewModel.saveDailyAnalysis()}"
             />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
