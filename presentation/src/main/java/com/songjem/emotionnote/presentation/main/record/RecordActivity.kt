@@ -18,11 +18,16 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_record) {
     private val viewModel : RecordViewModel by viewModels()
+    private lateinit var targetDate : String
 
+    @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding.viewModel = viewModel
         checkPermission()
+        targetDate = intent.getStringExtra("targetDate")!!
+        binding.tvTargetDateCalendar.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
+
         setObserve()
         setButtonClick()
     }
@@ -52,20 +57,21 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         viewModel.insertReportResult.observe(this) { insertResult ->
             Log.d("songjem", "insertResult = $insertResult")
             Toast.makeText(this, "분석된 감정이 등록이 되었습니다", Toast.LENGTH_SHORT).show()
+            finish()
         }
     }
 
     private fun setButtonClick() {
         binding.btnSaveAnalysisRecord.setOnClickListener {
-//            val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
-            val currentDate = binding.tvCurrentDateResultRecord.text.toString().replace(" ", "").replace(".", "")
+            val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
+//            val currentDate = binding.tvCurrentDateResultRecord.text.toString().replace(" ", "").replace(".", "")
             val emotionStatus = binding.tvEmotionStatusResultRecord.text.toString()
             val reportContent = binding.etDailyEmotionRecord.text.toString()
             val positive = binding.tvEmotionPositiveResultRecord.text.toString().toFloat()
             val negative = binding.tvEmotionNegativeResultRecord.text.toString().toFloat()
             val neutral = binding.tvEmotionNeutralResultRecord.text.toString().toFloat()
 
-            val emotionReport = EmotionReportItem(targetDate = currentDate, reportContent = reportContent
+            val emotionReport = EmotionReportItem(targetDate = targetDate, reportContent = reportContent
             , emotionStatus = emotionStatus, positive = positive, negative = negative
             , neutral = neutral, firstReportDate = currentDate, lastReportDate = currentDate)
 

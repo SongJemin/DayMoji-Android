@@ -1,14 +1,15 @@
 package com.songjem.emotionnote.presentation.main.calendar
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.util.Log
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.prolificinteractive.materialcalendarview.CalendarDay
-import com.songjem.domain.model.DailyEmotion
 import com.songjem.emotionnote.R
 import com.songjem.emotionnote.base.BaseFragment
 import com.songjem.emotionnote.databinding.FragmentCalendarBinding
+import com.songjem.emotionnote.presentation.main.record.RecordActivity
 import com.songjem.emotionnote.utils.def.EmotionStatus
 import com.songjem.emotionnote.utils.def.EmotionStatus.Companion.getEmotionStatus
 import com.songjem.emotionnote.utils.calendar.*
@@ -27,19 +28,21 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private val sosoDayList : ArrayList<CalendarDay> = ArrayList()
     private val loveDayList : ArrayList<CalendarDay> = ArrayList()
 
-    private val reportDayEmotionMap = HashMap<CalendarDay, DailyEmotion>()
-    private val tempEmotions = listOf<String>("즐거움", "화남", "슬픔", "살짝슬픔", "그저그럼", "행복함")
-    private val tempPositiveLevels = listOf<Float>(0.73f, 0.01f, 0.33f, 0.41f, 0.52f, 0.99f)
-    private val tempNegativeLevels = listOf<Float>(0.27f, 0.99f, 0.67f, 0.59f, 0.48f, 0.01f)
-    private val tempNeutralLevels = listOf<Float>(0.35f, 0.01f, 0.32f, 0.52f, 0.73f, 0.05f)
-
     @SuppressLint("SetTextI18n")
     override fun initView() {
         binding.apply {
             cvReportCalendar.selectedDate = CalendarDay.today()
             getDailyEmotionDetail(CalendarDay.today())
             cvReportCalendar.setOnDateChangedListener { widget, date, selected ->
+                cvReportCalendar.selectedDate = date
                 getDailyEmotionDetail(date)
+            }
+
+            btnAddRecordCalendar.setOnClickListener {
+                val intent = Intent(context, RecordActivity::class.java)
+                val targetDate = transTargetDateString(cvReportCalendar.selectedDate)
+                intent.putExtra("targetDate", targetDate)
+                startActivity(intent)
             }
         }
 
@@ -124,12 +127,15 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
     @SuppressLint("SetTextI18n")
     private fun getDailyEmotionDetail(date: CalendarDay) {
-        val year = date.year.toString()
-        val month = if((date.month + 1) <= 9) "0" + (date.month+1) else (date.month+1).toString()
-        val day = date.day.toString()
-        val targetDate = year + month + day
+        viewModel.getEmotionDetail(transTargetDateString(date))
+    }
 
-        viewModel.getEmotionDetail(targetDate)
+    private fun transTargetDateString(date: CalendarDay): String {
+        val year = date.year.toString()
+        val month =
+            if ((date.month + 1) <= 9) "0" + (date.month + 1) else (date.month + 1).toString()
+        val day = date.day.toString()
+        return year + month + day
     }
 
     @SuppressLint("SetTextI18n")
