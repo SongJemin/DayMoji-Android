@@ -1,9 +1,12 @@
 package com.songjem.emotionnote.presentation.main.calendar
 
 import android.annotation.SuppressLint
+import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.activityViewModels
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.songjem.emotionnote.R
@@ -28,11 +31,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private val sosoDayList : ArrayList<CalendarDay> = ArrayList()
     private val loveDayList : ArrayList<CalendarDay> = ArrayList()
 
+    private lateinit var getResult : ActivityResultLauncher<Intent>
+
     @SuppressLint("SetTextI18n")
     override fun initView() {
         binding.apply {
-            cvReportCalendar.selectedDate = CalendarDay.today()
-            getDailyEmotionDetail(CalendarDay.today())
             cvReportCalendar.setOnDateChangedListener { widget, date, selected ->
                 cvReportCalendar.selectedDate = date
                 getDailyEmotionDetail(date)
@@ -42,9 +45,20 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 val intent = Intent(context, RecordActivity::class.java)
                 val targetDate = transTargetDateString(cvReportCalendar.selectedDate)
                 intent.putExtra("targetDate", targetDate)
-                startActivity(intent)
+                getResult.launch(intent)
+            }
+
+            getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+                if(it.resultCode == RESULT_OK) {
+                    Log.d("songjem", "기록 추가 후 캘린더로 리턴, date = " + it.data!!.getStringExtra("selectedDate"))
+                    val addDate = it.data!!.getStringExtra("selectedDate")
+                    val selectedDate = CalendarDay.from(addDate!!.substring(0,4).toInt(), addDate.substring(4,6).toInt()-1,
+                        addDate.substring(6,8).toInt())
+                    refreshCal(selectedDate)
+                }
             }
         }
+        refreshCal(CalendarDay.today())
 
         viewModel.emotionMonthlyReport.observe(this) { monthlyList ->
             monthlyList.forEach { list ->
@@ -72,7 +86,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                     }
                 }
             }
-            setCalendar()
+            setDecorate()
         }
 
         viewModel.emotionReportListData.observe(this) { datas ->
@@ -98,7 +112,14 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         }
     }
 
-    private fun setCalendar() {
+    private fun refreshCal(selectedDate: CalendarDay) {
+        binding.cvReportCalendar.selectedDate = selectedDate
+        viewModel.getEmotionReportMonthly(transTargetDateString(binding.cvReportCalendar.selectedDate).substring(0, 6))
+        getDailyEmotionDetail(selectedDate)
+    }
+
+    private fun setDecorate() {
+        Log.d("songjem", "setCalendar Refresh")
         val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
         val happyDayDecorator = HappyDayDecorator(happyDayList, requireContext())
         val angryDayDecorator = AngryDayDecorator(angryDayList, requireContext())

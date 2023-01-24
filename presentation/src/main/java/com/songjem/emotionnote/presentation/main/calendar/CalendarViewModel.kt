@@ -63,6 +63,7 @@ class CalendarViewModel
 
     @SuppressLint("CheckResult")
     fun getEmotionReportMonthly(targetYearMonth : String) {
+        Log.d("songjem", "getEmotionReportMonth = $targetYearMonth")
         getEmotionMonthlyUseCase(targetYearMonth)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
