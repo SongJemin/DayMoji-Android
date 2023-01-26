@@ -1,6 +1,6 @@
-# Emotion Diary(임시)
+# 데이모지(DayMoji) - Android App
 
-> 하루하루 자신의 감정을 기록하는 앱(Android) - 혼자 틈틈이 진행하는 플젝
+> 하루하루 자신의 감정을 기록하는 앱(Day + Emoji) - 혼자 틈틈이 진행하는 플젝
 
 ---
 
