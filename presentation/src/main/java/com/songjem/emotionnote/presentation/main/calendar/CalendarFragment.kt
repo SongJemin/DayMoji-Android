@@ -43,6 +43,14 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 getDailyEmotionDetail(date)
             }
 
+            cvReportCalendar.setOnMonthChangedListener { widget, date ->
+                Log.d("songjem", "month click = $date")
+                val year = date.year.toString()
+                val month = if ((date.month + 1) <= 9) "0" + (date.month + 1) else (date.month + 1).toString()
+
+                changeYearMonth(year + month)
+            }
+
             btnAddRecordCalendar.setOnClickListener {
                 val intent = Intent(context, RecordActivity::class.java)
                 val targetDate = transTargetDateString(cvReportCalendar.selectedDate)
@@ -123,22 +131,27 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             binding.btnDeleteRecordCalendar.visibility = View.INVISIBLE
             binding.btnEditRecordCalendar.visibility = View.INVISIBLE
 
-            val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
-            binding.cvReportCalendar.addDecorators(dayBackgroundDecorator)
+//            val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
+//            binding.cvReportCalendar.addDecorators(dayBackgroundDecorator)
         }
 
         viewModel.deleteDate.observe(this) { date ->
             Toast.makeText(context, "기록을 삭제하였습니다.", Toast.LENGTH_SHORT).show()
 
             val year = date!!.substring(0,4)
-            val month =
+            var month =
                 if ((date.substring(4,6).toInt() - 1) <= 9) "0" + (date.substring(4,6).toInt() - 1) else (date.substring(4,6).toInt() - 1).toString()
             val day = date.substring(6,8)
             val deleteDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
             Log.d("songjem", "delete TargetDate = " + (year + month))
 //            viewModel.getEmotionReportMonthly(year + month)
             binding.cvReportCalendar.removeDecorators()
-            refreshCal(deleteDate)
+            val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
+            binding.cvReportCalendar.addDecorators(dayBackgroundDecorator)
+            val monthInt = month.toInt()
+            month = if (monthInt + 1 <= 9) "0" + (monthInt + 1) else (monthInt + 1).toString()
+            viewModel.getEmotionReportMonthly(year + month)
+            getDailyEmotionDetail(deleteDate)
         }
 
         viewModel.errorAlarm.observe(this) { msg ->
@@ -165,6 +178,10 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         binding.cvReportCalendar.selectedDate = selectedDate
         viewModel.getEmotionReportMonthly(transTargetDateString(binding.cvReportCalendar.selectedDate).substring(0, 6))
         getDailyEmotionDetail(selectedDate)
+    }
+
+    private fun changeYearMonth(yearMonth : String) {
+        viewModel.getEmotionReportMonthly(yearMonth)
     }
 
     private fun setDecorate() {
