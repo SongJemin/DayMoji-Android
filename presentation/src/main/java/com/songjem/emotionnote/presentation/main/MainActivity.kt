@@ -28,7 +28,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         binding.viewModel = mainViewModel
         calendarFragment = CalendarFragment()
         dashboardFragment = DashboardFragment()
-
         supportFragmentManager.beginTransaction().replace(R.id.fl_container_main, calendarFragment).commit()
 
         binding.btnTestpageMain.setOnClickListener {
@@ -43,7 +42,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
                     when(item.itemId) {
                         R.id.item_calendar_menu -> return(changeFragment(calendarFragment))
                         R.id.item_dashboard_menu -> return(changeFragment(dashboardFragment))
-//                        R.id.item_record_menu -> startRecord()
                     }
                     return false
                 }
