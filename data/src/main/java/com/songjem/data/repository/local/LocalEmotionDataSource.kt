@@ -11,5 +11,6 @@ interface LocalEmotionDataSource {
     fun getEmotionReportDetail(targetDate : String) : Maybe<EmotionReport>
     fun insertEmotionReports(emtionRepots: List<EmotionReport>): Completable
     fun insertEmotionReport(emotionReport: EmotionReport): Completable
+    fun deleteEmotionReport(targetDate : String) : Completable
     fun deleteAllEmotionReport(): Completable
 }

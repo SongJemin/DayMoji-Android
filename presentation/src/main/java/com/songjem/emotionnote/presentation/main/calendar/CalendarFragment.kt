@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.util.Log
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -24,12 +25,13 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
     override val viewModel : CalendarViewModel by activityViewModels()
 
-    private val happyDayList : ArrayList<CalendarDay> = ArrayList()
-    private val angryDayList : ArrayList<CalendarDay> = ArrayList()
-    private val sadDayList : ArrayList<CalendarDay> = ArrayList()
-    private val soSadDayList : ArrayList<CalendarDay> = ArrayList()
-    private val sosoDayList : ArrayList<CalendarDay> = ArrayList()
-    private val loveDayList : ArrayList<CalendarDay> = ArrayList()
+    private var happyDayList : ArrayList<CalendarDay> = ArrayList()
+    private var angryDayList : ArrayList<CalendarDay> = ArrayList()
+    private var sadDayList : ArrayList<CalendarDay> = ArrayList()
+    private var soSadDayList : ArrayList<CalendarDay> = ArrayList()
+    private var sosoDayList : ArrayList<CalendarDay> = ArrayList()
+    private var loveDayList : ArrayList<CalendarDay> = ArrayList()
+    private val emotionSaveDay = BooleanArray(32)
 
     private lateinit var getResult : ActivityResultLauncher<Intent>
 
@@ -57,14 +59,22 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                     refreshCal(selectedDate)
                 }
             }
+
+            btnDeleteRecordCalendar.setOnClickListener {
+                val targetDate = transTargetDateString(cvReportCalendar.selectedDate)
+                deleteEmotionReport(targetDate)
+            }
         }
         refreshCal(CalendarDay.today())
 
         viewModel.emotionMonthlyReport.observe(this) { monthlyList ->
+            clearDecorators()
+
             monthlyList.forEach { list ->
                 val date = CalendarDay.from(list.targetDate.substring(0,4).toInt(), list.targetDate.substring(4,6).toInt()-1,
                     list.targetDate.substring(6,8).toInt())
                 Log.d("songjem", "monthlyDate, targetDate = $date" + ", emotionStatus = " + list.emotionStatus)
+                emotionSaveDay[list.targetDate.substring(6,8).toInt()] = true
                 when (getEmotionStatus(list.emotionStatus)) {
                     EmotionStatus.HAPPY -> {
                         happyDayList.add(date)
@@ -101,10 +111,34 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             binding.tvNegativeLevelCalendar.text = "부정수치 : ${report.negative}"
             binding.tvNeutralLevelCalendar.text = "중립수치 : ${report.neutral}"
             binding.tvReportContentCalendar.text = report.reportContent
+
+            binding.btnAddRecordCalendar.visibility = View.INVISIBLE
+            binding.btnDeleteRecordCalendar.visibility = View.VISIBLE
+            binding.btnEditRecordCalendar.visibility = View.VISIBLE
         }
 
         viewModel.noDataAlarm.observe(this) {
             clearDetailContent()
+            binding.btnAddRecordCalendar.visibility = View.VISIBLE
+            binding.btnDeleteRecordCalendar.visibility = View.INVISIBLE
+            binding.btnEditRecordCalendar.visibility = View.INVISIBLE
+
+            val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
+            binding.cvReportCalendar.addDecorators(dayBackgroundDecorator)
+        }
+
+        viewModel.deleteDate.observe(this) { date ->
+            Toast.makeText(context, "기록을 삭제하였습니다.", Toast.LENGTH_SHORT).show()
+
+            val year = date!!.substring(0,4)
+            val month =
+                if ((date.substring(4,6).toInt() - 1) <= 9) "0" + (date.substring(4,6).toInt() - 1) else (date.substring(4,6).toInt() - 1).toString()
+            val day = date.substring(6,8)
+            val deleteDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
+            Log.d("songjem", "delete TargetDate = " + (year + month))
+//            viewModel.getEmotionReportMonthly(year + month)
+            binding.cvReportCalendar.removeDecorators()
+            refreshCal(deleteDate)
         }
 
         viewModel.errorAlarm.observe(this) { msg ->
@@ -112,7 +146,22 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         }
     }
 
+    private fun clearDecorators() {
+        binding.cvReportCalendar.removeDecorators()
+        happyDayList = ArrayList()
+        angryDayList = ArrayList()
+        sadDayList = ArrayList()
+        soSadDayList = ArrayList()
+        sosoDayList = ArrayList()
+        loveDayList = ArrayList()
+    }
+
+    private fun deleteEmotionReport(targetDate : String) {
+        viewModel.deleteEmotionReport(targetDate)
+    }
+
     private fun refreshCal(selectedDate: CalendarDay) {
+        Log.d("songjem", "refreshCal = $selectedDate")
         binding.cvReportCalendar.selectedDate = selectedDate
         viewModel.getEmotionReportMonthly(transTargetDateString(binding.cvReportCalendar.selectedDate).substring(0, 6))
         getDailyEmotionDetail(selectedDate)
@@ -132,6 +181,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         val saturdayDecorator = SaturdayDecorator()
         val todayDecorator = TodayDecorator(requireContext())
 
+
         binding.cvReportCalendar.addDecorators(
             dayBackgroundDecorator,
             happyDayDecorator,
@@ -144,6 +194,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             saturdayDecorator,
             todayDecorator
         )
+
     }
 
     @SuppressLint("SetTextI18n")
@@ -153,8 +204,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
     private fun transTargetDateString(date: CalendarDay): String {
         val year = date.year.toString()
-        val month =
-            if ((date.month + 1) <= 9) "0" + (date.month + 1) else (date.month + 1).toString()
+        val month = if ((date.month + 1) <= 9) "0" + (date.month + 1) else (date.month + 1).toString()
         val day = if(date.day <= 9) ("0" + date.day) else date.day.toString()
         return year + month + day
     }

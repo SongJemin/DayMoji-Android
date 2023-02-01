@@ -21,6 +21,10 @@ interface EmotionRepository {
         targetDate : String
     ) : Maybe<EmotionReportItem>
 
+    fun deleteEmotionReport(
+        targetDate : String
+    ) : Completable
+
     fun getRemoteTestDatas(
     ) : Single<List<EmotionReportItem>>
 
