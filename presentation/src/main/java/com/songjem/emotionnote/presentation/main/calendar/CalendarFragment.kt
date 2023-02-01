@@ -2,12 +2,14 @@ package com.songjem.emotionnote.presentation.main.calendar
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.DialogInterface
 import android.content.Intent
 import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.activityViewModels
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.songjem.emotionnote.R
@@ -69,8 +71,18 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             }
 
             btnDeleteRecordCalendar.setOnClickListener {
-                val targetDate = transTargetDateString(cvReportCalendar.selectedDate)
-                deleteEmotionReport(targetDate)
+                val builder = AlertDialog.Builder(requireContext())
+                    .setMessage("감정 기록을 삭제할까요?")
+                    .setPositiveButton("확인"
+                    ) { _, _ ->
+                        val targetDate = transTargetDateString(cvReportCalendar.selectedDate)
+                        deleteEmotionReport(targetDate)
+                    }
+                    .setNegativeButton("취소"
+                    ) { _, _ ->
+                    }
+                builder.show()
+
             }
         }
         refreshCal(CalendarDay.today())
@@ -130,26 +142,19 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             binding.btnAddRecordCalendar.visibility = View.VISIBLE
             binding.btnDeleteRecordCalendar.visibility = View.INVISIBLE
             binding.btnEditRecordCalendar.visibility = View.INVISIBLE
-
-//            val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
-//            binding.cvReportCalendar.addDecorators(dayBackgroundDecorator)
         }
 
         viewModel.deleteDate.observe(this) { date ->
             Toast.makeText(context, "기록을 삭제하였습니다.", Toast.LENGTH_SHORT).show()
 
             val year = date!!.substring(0,4)
-            var month =
-                if ((date.substring(4,6).toInt() - 1) <= 9) "0" + (date.substring(4,6).toInt() - 1) else (date.substring(4,6).toInt() - 1).toString()
+            var month = if ((date.substring(4,6).toInt() - 1) <= 9) "0" + (date.substring(4,6).toInt() - 1) else (date.substring(4,6).toInt() - 1).toString()
             val day = date.substring(6,8)
             val deleteDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
-            Log.d("songjem", "delete TargetDate = " + (year + month))
-//            viewModel.getEmotionReportMonthly(year + month)
+
             binding.cvReportCalendar.removeDecorators()
-            val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
-            binding.cvReportCalendar.addDecorators(dayBackgroundDecorator)
-            val monthInt = month.toInt()
-            month = if (monthInt + 1 <= 9) "0" + (monthInt + 1) else (monthInt + 1).toString()
+            binding.cvReportCalendar.addDecorators(DayBackgroundDecorator(requireContext()))
+            month = if (month.toInt() + 1 <= 9) "0" + (month.toInt() + 1) else (month.toInt() + 1).toString()
             viewModel.getEmotionReportMonthly(year + month)
             getDailyEmotionDetail(deleteDate)
         }
