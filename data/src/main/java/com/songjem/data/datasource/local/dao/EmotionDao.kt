@@ -24,6 +24,9 @@ interface EmotionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertEmotionReport(emotionReport: EmotionReport) : Completable
 
+    @Query("DELETE FROM EmotionReport WHERE targetDate = :targetDate")
+    fun deleteEmotionReport(targetDate : String) : Completable
+
     @Query("DELETE FROM EmotionReport")
     fun deleteAllEmotionReport() : Completable
 }

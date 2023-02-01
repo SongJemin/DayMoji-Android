@@ -29,8 +29,8 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         binding.viewModel = viewModel
         checkPermission()
         targetDate = intent.getStringExtra("targetDate")!!
-        Log.d("songjem", "targetDate = $targetDate")
-        binding.tvTargetDateCalendar.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
+        Log.d("songjem", "RecordActivity, getIntent targetDate = $targetDate")
+         binding.tvTargetDateCalendar.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
 
         setObserve()
         setButtonClick()

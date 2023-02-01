@@ -4,11 +4,10 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.songjem.data.util.DateUtil
+import com.songjem.data.util.DateUtil.dateToString
 import com.songjem.domain.model.EmotionReportItem
-import com.songjem.domain.usecase.emotion.DeleteAllEmotionReportUseCase
-import com.songjem.domain.usecase.emotion.GetEmotionDetailUseCase
-import com.songjem.domain.usecase.emotion.GetEmotionMonthlyUseCase
-import com.songjem.domain.usecase.emotion.GetEmotionReportsUseCase
+import com.songjem.domain.usecase.emotion.*
 import com.songjem.emotionnote.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -20,7 +19,8 @@ class CalendarViewModel
 @Inject constructor(
     private val getEmotionReportsUseCase: GetEmotionReportsUseCase,
     private val getEmotionDetailUseCase : GetEmotionDetailUseCase,
-    private val getEmotionMonthlyUseCase: GetEmotionMonthlyUseCase
+    private val getEmotionMonthlyUseCase: GetEmotionMonthlyUseCase,
+    private val deleteEmotionReportUseCase : DeleteEmotionReportUseCase
 ) : BaseViewModel() {
 
     private var _emotionReportListData = MutableLiveData<String>()
@@ -38,10 +38,28 @@ class CalendarViewModel
     private var _errorAlarm = MutableLiveData<String>()
     val errorAlarm : LiveData<String> get() = _errorAlarm
 
+    private var _deleteDate = MutableLiveData<String>()
+    val deleteDate : LiveData<String> get() = _deleteDate
+
     init {
 //        getEmotionReportList()
-        getEmotionReportMonthly("202301")
-        getEmotionDetail("20230123")
+        val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
+        getEmotionReportMonthly(currentDate.substring(0, 4))
+        getEmotionDetail(currentDate)
+    }
+
+    @SuppressLint("CheckResult")
+    fun deleteEmotionReport(targetDate: String) {
+        Log.d("songjem", "deleteTargetDate = $targetDate")
+        deleteEmotionReportUseCase(targetDate)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({
+                Log.d("songjem", "deleteEmotionReport")
+                _deleteDate.value = targetDate
+            }, {
+                Log.d("songjem", "deleteEmotionReport throwable, msg = " + it.message)
+            })
     }
 
     @SuppressLint("CheckResult")

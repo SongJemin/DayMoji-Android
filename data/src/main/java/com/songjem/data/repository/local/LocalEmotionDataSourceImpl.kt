@@ -20,5 +20,7 @@ class LocalEmotionDataSourceImpl @Inject constructor(private val emotionDao: Emo
 
     override fun insertEmotionReport(emotionReport: EmotionReport): Completable = emotionDao.insertEmotionReport(emotionReport)
 
+    override fun deleteEmotionReport(targetDate: String): Completable = emotionDao.deleteEmotionReport(targetDate)
+
     override fun deleteAllEmotionReport(): Completable = emotionDao.deleteAllEmotionReport()
 }

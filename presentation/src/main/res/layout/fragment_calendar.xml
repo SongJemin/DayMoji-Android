@@ -120,35 +120,36 @@
             </LinearLayout>
             <Button
                 android:id="@+id/btn_add_record_calendar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="70dp"
                 android:background="@drawable/tab_record_plus_icon"
+                android:visibility="invisible"
                 />
             <Button
                 android:id="@+id/btn_delete_record_calendar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="70dp"
                 android:background="@drawable/delete_record_icon"
-                android:visibility="gone"
+                android:visibility="visible"
                 />
             <Button
                 android:id="@+id/btn_edit_record_calendar"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
-                android:layout_alignParentEnd="true"
-                android:layout_marginEnd="15dp"
+                android:layout_marginEnd="10dp"
                 android:layout_marginBottom="70dp"
                 android:background="@drawable/edit_record_icon"
-                android:visibility="gone"
+                android:visibility="visible"
+                android:layout_toStartOf="@+id/btn_delete_record_calendar"
                 />
         </RelativeLayout>
     </RelativeLayout>

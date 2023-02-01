@@ -71,6 +71,11 @@ class EmotionRepositoryImpl @Inject constructor(
             }
     }
 
+    override fun deleteEmotionReport(targetDate: String): Completable {
+        Log.d("songjem", "delete targetDate = $targetDate")
+        return localEmotionDataSource.deleteEmotionReport(targetDate)
+    }
+
     override fun getRemoteTestDatas(): Single<List<EmotionReportItem>> {
         return remoteTestDataSource.getRemoteAllTestData()
             .flatMap {

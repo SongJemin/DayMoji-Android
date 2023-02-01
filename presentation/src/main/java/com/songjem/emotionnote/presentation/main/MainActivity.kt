@@ -59,9 +59,4 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         }
         return false
     }
-
-    private fun startRecord() {
-        val intent = Intent(applicationContext, RecordActivity::class.java)
-        startActivity(intent)
-    }
 }
