@@ -137,6 +137,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="70dp"
                 android:background="@drawable/delete_record_icon"
+                android:visibility="gone"
                 />
             <Button
                 android:id="@+id/btn_edit_record_calendar"
@@ -147,6 +148,7 @@
                 android:layout_marginEnd="15dp"
                 android:layout_marginBottom="70dp"
                 android:background="@drawable/edit_record_icon"
+                android:visibility="gone"
                 />
         </RelativeLayout>
     </RelativeLayout>

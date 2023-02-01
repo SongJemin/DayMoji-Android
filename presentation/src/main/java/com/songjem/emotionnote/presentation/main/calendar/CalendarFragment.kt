@@ -155,7 +155,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         val year = date.year.toString()
         val month =
             if ((date.month + 1) <= 9) "0" + (date.month + 1) else (date.month + 1).toString()
-        val day = date.day.toString()
+        val day = if(date.day <= 9) ("0" + date.day) else date.day.toString()
         return year + month + day
     }
 
