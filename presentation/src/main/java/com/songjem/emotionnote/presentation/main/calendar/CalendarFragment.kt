@@ -70,6 +70,15 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 }
             }
 
+            btnEditRecordCalendar.setOnClickListener {
+                val intent = Intent(activity, RecordActivity::class.java)
+                val year = cvReportCalendar.selectedDate.year.toString()
+                val month = if(cvReportCalendar.selectedDate.month + 1 <= 9) ("0" + (cvReportCalendar.selectedDate.month + 1)) else (cvReportCalendar.selectedDate.month + 1).toString()
+                val day = if(cvReportCalendar.selectedDate.day <= 9) ("0" + cvReportCalendar.selectedDate.day + 1) else cvReportCalendar.selectedDate.day.toString()
+                intent.putExtra("targetDate", year + month + day)
+                startActivity(intent)
+            }
+
             btnDeleteRecordCalendar.setOnClickListener {
                 val builder = AlertDialog.Builder(requireContext())
                     .setMessage("감정 기록을 삭제할까요?")
