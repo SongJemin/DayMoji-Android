@@ -14,6 +14,7 @@ import com.songjem.domain.model.DailyEmotion
 import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.model.SentimentAnalysisItem
 import com.songjem.domain.usecase.analysis.SentimentAnalysisUseCase
+import com.songjem.domain.usecase.emotion.GetEmotionDetailUseCase
 import com.songjem.domain.usecase.emotion.InsertEmotionReportUseCase
 import com.songjem.domain.usecase.test.*
 import com.songjem.emotionnote.base.BaseViewModel
@@ -27,7 +28,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RecordViewModel @Inject constructor(
     private val sentimentAnalysisUseCase: SentimentAnalysisUseCase,
-    private val insertEmotionReportUseCase: InsertEmotionReportUseCase
+    private val insertEmotionReportUseCase: InsertEmotionReportUseCase,
+    private val getEmotionDetailUseCase: GetEmotionDetailUseCase
 )
     : BaseViewModel() {
 
@@ -44,8 +46,34 @@ class RecordViewModel @Inject constructor(
     private var _insertReportResult = MutableLiveData<Boolean>()
     val insertReportResult : LiveData<Boolean> get() = _insertReportResult
 
+    private var _emotionReport = MutableLiveData<EmotionReportItem>()
+    val emotionReport : LiveData<EmotionReportItem> get() = _emotionReport
+
+    private var _errorAlarm = MutableLiveData<String>()
+    val errorAlarm : LiveData<String> get() = _errorAlarm
+
+    private var _noDataAlarm = MutableLiveData<Boolean>()
+    val noDataAlarm : LiveData<Boolean> get() = _noDataAlarm
+
     init {
         initVoiceRecord()
+    }
+
+    @SuppressLint("CheckResult")
+    fun getEmotionDetail(targetDate : String) {
+        getEmotionDetailUseCase(targetDate)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ data ->
+                Log.d("songjem", "getEditEmotionDetail Success, report = $data")
+                _emotionReport.value = data
+            }, {
+                Log.e("songjem", "getEditEmotionDetail Error, msg = " + it.message)
+                _errorAlarm.value = it.message
+            }, {
+                Log.d("songjem","getEditEmotionDetail Complete, No Data")
+                _noDataAlarm.value = true
+            })
     }
 
     @SuppressLint("CheckResult")
