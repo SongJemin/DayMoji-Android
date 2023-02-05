@@ -2,8 +2,8 @@ package com.songjem.emotionnote.presentation.main.calendar
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
-import android.content.DialogInterface
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.Toast
@@ -34,6 +34,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var sosoDayList : ArrayList<CalendarDay> = ArrayList()
     private var loveDayList : ArrayList<CalendarDay> = ArrayList()
     private val emotionSaveDay = BooleanArray(32)
+    private val saveDate = "SELECTED_DATE"
+    private var selectedDate : String? = null
 
     private lateinit var getResult : ActivityResultLauncher<Intent>
 
@@ -61,6 +63,14 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 getResult.launch(intent)
             }
 
+            btnEditRecordCalendar.setOnClickListener {
+                val intent = Intent(context, RecordActivity::class.java)
+                val targetDate = transTargetDateString(cvReportCalendar.selectedDate)
+                intent.putExtra("targetDate", targetDate)
+                intent.putExtra("addOrEdit", "EDIT")
+                getResult.launch(intent)
+            }
+
             getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
                 if(it.resultCode == RESULT_OK) {
                     Log.d("songjem", "기록 추가 후 캘린더로 리턴, date = " + it.data!!.getStringExtra("selectedDate"))
@@ -69,16 +79,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                         addDate.substring(6,8).toInt())
                     refreshCal(selectedDate)
                 }
-            }
-
-            btnEditRecordCalendar.setOnClickListener {
-                val intent = Intent(activity, RecordActivity::class.java)
-                val year = cvReportCalendar.selectedDate.year.toString()
-                val month = if(cvReportCalendar.selectedDate.month + 1 <= 9) ("0" + (cvReportCalendar.selectedDate.month + 1)) else (cvReportCalendar.selectedDate.month + 1).toString()
-                val day = if(cvReportCalendar.selectedDate.day <= 9) ("0" + cvReportCalendar.selectedDate.day + 1) else cvReportCalendar.selectedDate.day.toString()
-                intent.putExtra("targetDate", year + month + day)
-                intent.putExtra("addOrEdit", "EDIT")
-                startActivity(intent)
             }
 
             btnDeleteRecordCalendar.setOnClickListener {
@@ -93,7 +93,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                     ) { _, _ ->
                     }
                 builder.show()
-
             }
         }
         refreshCal(CalendarDay.today())
@@ -201,7 +200,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     }
 
     private fun setDecorate() {
-        Log.d("songjem", "setCalendar Refresh")
+        Log.d("songjem", "setCalendar Refresh, selectedDate = " + binding.cvReportCalendar.selectedDate)
+
+        if(binding.cvReportCalendar.selectedDate != null) getDailyEmotionDetail(binding.cvReportCalendar.selectedDate)
+        else getDailyEmotionDetail(CalendarDay.today())
+
         val dayBackgroundDecorator = DayBackgroundDecorator(requireContext())
         val happyDayDecorator = HappyDayDecorator(happyDayList, requireContext())
         val angryDayDecorator = AngryDayDecorator(angryDayList, requireContext())
@@ -213,7 +216,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         val sundayDecorator = SundayDecorator()
         val saturdayDecorator = SaturdayDecorator()
         val todayDecorator = TodayDecorator(requireContext())
-
 
         binding.cvReportCalendar.addDecorators(
             dayBackgroundDecorator,
@@ -227,7 +229,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             saturdayDecorator,
             todayDecorator
         )
-
     }
 
     @SuppressLint("SetTextI18n")

@@ -55,9 +55,9 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
             else "그저그럼"
 
             binding.tvEmotionStatusResultRecord.text = emotionStatus
-            binding.tvEmotionPositiveResultRecord.text = dailyEmotion.emotionDetail.positive.toString()
-            binding.tvEmotionNegativeResultRecord.text = dailyEmotion.emotionDetail.negative.toString()
-            binding.tvEmotionNeutralResultRecord.text = dailyEmotion.emotionDetail.neutral.toString()
+            binding.tvEmotionPositiveResultRecord.text = String.format("%.5f", dailyEmotion.emotionDetail.positive)
+            binding.tvEmotionNegativeResultRecord.text = String.format("%.5f", dailyEmotion.emotionDetail.negative)
+            binding.tvEmotionNeutralResultRecord.text = String.format("%.5f", dailyEmotion.emotionDetail.neutral)
         }
 
         viewModel.voiceRecordContent.observe(this) { recordContent ->
