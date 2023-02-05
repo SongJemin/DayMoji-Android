@@ -41,7 +41,7 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         viewModel.dailyEmotion.observe(this) { dailyEmotion ->
             val emotionScore = (dailyEmotion.emotionDetail.positive - dailyEmotion.emotionDetail.negative) / 2
             val emotionStatus = if(emotionScore > 25.0) "행복함"
-            else if(emotionScore in -10.0..10.0 && dailyEmotion.emotionDetail.neutral >= 50.0) "그저그럼"
+            else if(emotionScore in -10.0..10.0) "그저그럼"
             else if(emotionScore < 25.0 && emotionScore >= 0.0) "즐거움"
             else if(emotionScore < 0.0 && emotionScore >= -25.0) "슬픔"
             else if(emotionScore < -25.0 && emotionScore >= -50.0) "화남"
