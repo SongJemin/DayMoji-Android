@@ -57,6 +57,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 val intent = Intent(context, RecordActivity::class.java)
                 val targetDate = transTargetDateString(cvReportCalendar.selectedDate)
                 intent.putExtra("targetDate", targetDate)
+                intent.putExtra("addOrEdit", "ADD")
                 getResult.launch(intent)
             }
 
@@ -76,6 +77,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 val month = if(cvReportCalendar.selectedDate.month + 1 <= 9) ("0" + (cvReportCalendar.selectedDate.month + 1)) else (cvReportCalendar.selectedDate.month + 1).toString()
                 val day = if(cvReportCalendar.selectedDate.day <= 9) ("0" + cvReportCalendar.selectedDate.day + 1) else cvReportCalendar.selectedDate.day.toString()
                 intent.putExtra("targetDate", year + month + day)
+                intent.putExtra("addOrEdit", "EDIT")
                 startActivity(intent)
             }
 

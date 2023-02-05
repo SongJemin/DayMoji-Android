@@ -14,7 +14,6 @@ import com.songjem.domain.model.EmotionReportItem
 import com.songjem.emotionnote.R
 import com.songjem.emotionnote.base.BaseActivity
 import com.songjem.emotionnote.databinding.ActivityRecordBinding
-import com.songjem.emotionnote.presentation.main.MainActivity
 import dagger.hilt.android.AndroidEntryPoint
 
 
@@ -22,6 +21,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_record) {
     private val viewModel : RecordViewModel by viewModels()
     private lateinit var targetDate : String
+    private lateinit var addOrEdit : String
 
     @SuppressLint("SetTextI18n")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,11 +29,18 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         binding.viewModel = viewModel
         checkPermission()
         targetDate = intent.getStringExtra("targetDate")!!
+        addOrEdit = intent.getStringExtra("addOrEdit")!!
         Log.d("songjem", "RecordActivity, getIntent targetDate = $targetDate")
-         binding.tvTargetDateCalendar.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
+        Log.d("songjem", "RecordActivity, getIntent addOrEdit = $addOrEdit")
+        binding.tvTargetDateCalendar.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
 
+        if(addOrEdit == "EDIT") getDailyEmotionDetail(targetDate)
         setObserve()
         setButtonClick()
+    }
+
+    private fun getDailyEmotionDetail(targetDate : String) {
+        viewModel.getEmotionDetail(targetDate)
     }
 
     @SuppressLint("SetTextI18n")
@@ -51,7 +58,6 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
             binding.tvEmotionPositiveResultRecord.text = dailyEmotion.emotionDetail.positive.toString()
             binding.tvEmotionNegativeResultRecord.text = dailyEmotion.emotionDetail.negative.toString()
             binding.tvEmotionNeutralResultRecord.text = dailyEmotion.emotionDetail.neutral.toString()
-            binding.tvCurrentDateResultRecord.text = DateUtil.currentDate().dateToString("yyyy. MM. dd")
         }
 
         viewModel.voiceRecordContent.observe(this) { recordContent ->
@@ -66,12 +72,20 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
             setResult(RESULT_OK, intent)
             finish()
         }
+
+        viewModel.emotionReport.observe(this) { report ->
+            binding.etDailyEmotionRecord.setText(report.reportContent)
+            binding.tvEmotionStatusResultRecord.text = report.emotionStatus
+            binding.tvEmotionPositiveResultRecord.text = report.positive.toString()
+            binding.tvEmotionNegativeResultRecord.text = report.negative.toString()
+            binding.tvEmotionNeutralResultRecord.text = report.neutral.toString()
+            binding.btnSaveAnalysisRecord.text = "수정하기"
+        }
     }
 
     private fun setButtonClick() {
         binding.btnSaveAnalysisRecord.setOnClickListener {
             val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
-//            val currentDate = binding.tvCurrentDateResultRecord.text.toString().replace(" ", "").replace(".", "")
             val emotionStatus = binding.tvEmotionStatusResultRecord.text.toString()
             val reportContent = binding.etDailyEmotionRecord.text.toString()
             val positive = binding.tvEmotionPositiveResultRecord.text.toString().toFloat()
