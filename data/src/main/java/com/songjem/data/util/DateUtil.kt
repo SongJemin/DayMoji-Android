@@ -12,4 +12,11 @@ object DateUtil {
     fun currentDate(): Date {
         return Calendar.getInstance().time
     }
+
+    fun prevDateFromToday(count : Int) : Date {
+        val cal = GregorianCalendar(Locale.KOREA)
+        cal.time = currentDate()
+        cal.add(Calendar.DATE, count)
+        return cal.time
+    }
 }

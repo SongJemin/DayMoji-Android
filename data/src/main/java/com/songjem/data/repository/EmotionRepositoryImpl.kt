@@ -2,12 +2,14 @@ package com.songjem.data.repository
 
 import android.util.Log
 import com.songjem.data.datasource.local.model.EmotionReport
+import com.songjem.data.mapper.emotion.mapperToDashBoard
 import com.songjem.data.mapper.emotion.mapperToEmotion
 import com.songjem.data.mapper.emotion.mapperToEmotionList
 import com.songjem.data.repository.local.LocalEmotionDataSource
 import com.songjem.data.repository.remote.test.RemoteTestDataSource
 import com.songjem.data.util.DateUtil
 import com.songjem.data.util.DateUtil.dateToString
+import com.songjem.domain.model.DashBoardEmotionItem
 import com.songjem.domain.model.EmotionReportItem
 import com.songjem.domain.repository.EmotionRepository
 import io.reactivex.Completable
@@ -68,6 +70,16 @@ class EmotionRepositoryImpl @Inject constructor(
             .flatMap {
                 Log.d("songjem", "emotionReport = $it")
                 Maybe.just(mapperToEmotion(it))
+            }
+    }
+
+    override fun getDashboardPerWeek(startDate: String, endDate: String) : Single<List<DashBoardEmotionItem>> {
+        Log.d("songjem", "startDate = $startDate, endDate = $endDate")
+        return localEmotionDataSource.getDashboardPerWeek(startDate, endDate)
+            .onErrorReturn { listOf() }
+            .flatMap {
+                Log.d("songjem", "DashboardPerWeekList = $it")
+                Single.just(mapperToDashBoard(it))
             }
     }
 

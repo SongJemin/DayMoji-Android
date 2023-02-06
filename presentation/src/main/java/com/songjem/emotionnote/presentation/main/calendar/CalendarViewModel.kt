@@ -64,6 +64,7 @@ class CalendarViewModel
 
     @SuppressLint("CheckResult")
     fun getEmotionDetail(targetDate : String) {
+        Log.d("songjem", "getEmotionDetail, targetDate = $targetDate")
         getEmotionDetailUseCase(targetDate)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
