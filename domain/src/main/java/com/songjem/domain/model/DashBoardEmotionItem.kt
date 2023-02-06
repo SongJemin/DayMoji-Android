@@ -2,6 +2,6 @@ package com.songjem.domain.model
 
 data class DashBoardEmotionItem(
     val targetDate: String,
-    val emotionScore: Int,
-    val neutralScore: Int
+    val emotionScore: Float,
+    val neutralScore: Float
 )

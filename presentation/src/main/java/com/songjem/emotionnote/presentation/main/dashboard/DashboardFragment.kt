@@ -1,6 +1,7 @@
 package com.songjem.emotionnote.presentation.main.dashboard
 
 import android.graphics.Color
+import android.util.Log
 import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.components.Legend
@@ -11,6 +12,7 @@ import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.songjem.data.util.DateUtil
 import com.songjem.data.util.DateUtil.dateToString
+import com.songjem.domain.model.DashBoardEmotionItem
 import com.songjem.emotionnote.R
 import com.songjem.emotionnote.base.BaseFragment
 import com.songjem.emotionnote.databinding.FragmentDashboardBinding
@@ -23,13 +25,22 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
     override val viewModel : DashboardViewModel by activityViewModels()
 
     override fun initView() {
-        binding.apply {
-            configureChartAppearance(mpLineDashboard)
-            prepareChartData(createChartData(), mpLineDashboard)
-        }
+        setObserve()
+        getDashboardPerWeek()
+    }
 
+    private fun setObserve() {
+        viewModel.dashboardEmotions.observe(this) { list ->
+            binding.apply {
+                configureChartAppearance(mpLineDashboard)
+                prepareChartData(createChartData(list), mpLineDashboard)
+            }
+        }
+    }
+
+    private fun getDashboardPerWeek() {
         val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
-        val startDate = DateUtil.prevDateFromToday(count = -7).dateToString("yyyyMMdd")
+        val startDate = DateUtil.prevDateFromToday(count = -6).dateToString("yyyyMMdd")
         viewModel.getDashboardPerWeek(startDate, currentDate)
     }
 
@@ -38,14 +49,13 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         lineChart.invalidate() // LineChart 갱신해 데이터 표시
     }
 
-    private fun createChartData(): LineData {
+    private fun createChartData(emotionList : List<DashBoardEmotionItem>): LineData {
         val emotionEntries = ArrayList<Entry>()
         val chartData = LineData()
 
-        // TEST 데이터 추출
-        for (i in 0..6) {
-            val emotionLevel = (Math.random() * 100.0).toFloat() - 50f // 감정수치 값
-            emotionEntries.add(Entry(i.toFloat(), emotionLevel))
+        for(i in emotionList.indices) {
+            Log.d("songjem", "emotionScore[" + i + "] = " + emotionList[i].emotionScore)
+            emotionEntries.add(Entry(i.toFloat(), emotionList[i].emotionScore))
         }
 
         val lineDataSet = LineDataSet(emotionEntries, "감정수치")

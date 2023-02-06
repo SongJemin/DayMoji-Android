@@ -40,15 +40,11 @@ fun mapperToEmotion(emotionReportEntity: EmotionReport): EmotionReportItem {
 fun mapperToDashBoard(emotionReportEntities: List<EmotionReport>): List<DashBoardEmotionItem> {
 
     return emotionReportEntities.toList().map { report ->
-        val emotionScore = if(report.positive != null && report.negative != null) {
-            (report.positive - report.negative).toInt()
-        } else if(report.score != null) {
-            report.score.toInt()
-        } else 0
+        val emotionScore : Float = if(report.positive != null && report.negative != null) {
+            (report.positive - report.negative) / 2
+        } else (report.score?.div(2)) ?: 0f
 
-        val neutralScore = if(report.neutral != null) report.neutral.toInt()
-        else if(report.magnitude != null) report.magnitude.toInt()
-        else 0
+        val neutralScore : Float = (report.neutral ?: (report.magnitude ?: 0)) as Float
 
         Log.d("songjemt", "targetDate = " + report.targetDate + ", positive = " + report.positive + ", negative = " + report.negative + ", neutral = " + report.neutral)
         Log.d("songjem", "emotionScore = $emotionScore, neutralScore = $neutralScore")
