@@ -9,6 +9,8 @@ import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.ValueFormatter
+import com.songjem.data.util.DateUtil
+import com.songjem.data.util.DateUtil.dateToString
 import com.songjem.emotionnote.R
 import com.songjem.emotionnote.base.BaseFragment
 import com.songjem.emotionnote.databinding.FragmentDashboardBinding
@@ -25,6 +27,10 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
             configureChartAppearance(mpLineDashboard)
             prepareChartData(createChartData(), mpLineDashboard)
         }
+
+        val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
+        val startDate = DateUtil.prevDateFromToday(count = -7).dateToString("yyyyMMdd")
+        viewModel.getDashboardPerWeek(startDate, currentDate)
     }
 
     private fun prepareChartData(data: LineData, lineChart: LineChart) {
