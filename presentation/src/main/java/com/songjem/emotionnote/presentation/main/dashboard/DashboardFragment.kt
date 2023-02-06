@@ -4,11 +4,13 @@ import android.graphics.Color
 import android.util.Log
 import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.formatter.ValueFormatter
 import com.songjem.data.util.DateUtil
 import com.songjem.data.util.DateUtil.dateToString
@@ -22,6 +24,7 @@ import dagger.hilt.android.AndroidEntryPoint
 @AndroidEntryPoint
 class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragment_dashboard) {
 
+    private lateinit var dashBoardEmotions : List<DashBoardEmotionItem>
     override val viewModel : DashboardViewModel by activityViewModels()
 
     override fun initView() {
@@ -31,9 +34,10 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
     private fun setObserve() {
         viewModel.dashboardEmotions.observe(this) { list ->
+            dashBoardEmotions = list
             binding.apply {
                 configureChartAppearance(mpLineDashboard)
-                prepareChartData(createChartData(list), mpLineDashboard)
+                prepareChartData(createChartData(), mpLineDashboard)
             }
         }
     }
@@ -49,13 +53,13 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         lineChart.invalidate() // LineChart 갱신해 데이터 표시
     }
 
-    private fun createChartData(emotionList : List<DashBoardEmotionItem>): LineData {
+    private fun createChartData(): LineData {
         val emotionEntries = ArrayList<Entry>()
         val chartData = LineData()
 
-        for(i in emotionList.indices) {
-            Log.d("songjem", "emotionScore[" + i + "] = " + emotionList[i].emotionScore)
-            emotionEntries.add(Entry(i.toFloat(), emotionList[i].emotionScore))
+        for(i in dashBoardEmotions.indices) {
+            Log.d("songjem", "emotionScore[" + i + "] = " + dashBoardEmotions[i].emotionScore)
+            emotionEntries.add(Entry(i.toFloat(), dashBoardEmotions[i].emotionScore))
         }
 
         val lineDataSet = LineDataSet(emotionEntries, "감정수치")
@@ -129,12 +133,20 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         yAxis.axisMaximum = 50f // 최댓값
         yAxis.granularity = 1f
 
-        // XAxis에 원하는 String 설정하기 (날짜)
-        xAxis.valueFormatter = object : ValueFormatter() {
-            override fun getFormattedValue(value: Float): String {
-                // TEST 데이터
-                return "17일"
-            }
+        val xDays = ArrayList<String>()
+        for(i in dashBoardEmotions.indices){
+            val month = dashBoardEmotions[i].targetDate.substring(4, 6)
+            val monthXValue = if(month.toInt() < 10) month.substring(1)
+            else month
+
+            val day = dashBoardEmotions[i].targetDate.substring(6, 8)
+            val dayXValue = if(day.toInt() < 10) day.substring(1)
+            else day
+
+            if(day.toInt() == 1) xDays.add(monthXValue + "/" + dayXValue + "일")
+            else xDays.add(dayXValue + "일")
         }
+
+        lineChart.xAxis.valueFormatter= IndexAxisValueFormatter(xDays)
     }
 }
