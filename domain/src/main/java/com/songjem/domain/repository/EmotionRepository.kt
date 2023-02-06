@@ -1,5 +1,6 @@
 package com.songjem.domain.repository
 
+import com.songjem.domain.model.DashBoardEmotionItem
 import com.songjem.domain.model.EmotionReportItem
 import io.reactivex.Completable
 import io.reactivex.Flowable
@@ -24,7 +25,7 @@ interface EmotionRepository {
     fun getDashboardPerWeek(
         startDate : String,
         endDate : String
-    ) : Single<List<EmotionReportItem>>
+    ) : Single<List<DashBoardEmotionItem>>
 
     fun deleteEmotionReport(
         targetDate : String

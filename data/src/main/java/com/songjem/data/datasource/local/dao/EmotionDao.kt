@@ -18,7 +18,7 @@ interface EmotionDao {
     @Query("SELECT * FROM EmotionReport WHERE targetDate = :targetDate")
     fun getEmotionReportDetail(targetDate: String): Maybe<EmotionReport>
 
-    @Query("SELECT positive, negative, neutral FROM EmotionReport WHERE targetDate BETWEEN :startDate AND :endDate")
+    @Query("SELECT * FROM EmotionReport WHERE targetDate BETWEEN :startDate AND :endDate")
     fun getDashboardPerWeek(startDate : String, endDate: String): Single<List<EmotionReport>>
 
     @Insert
