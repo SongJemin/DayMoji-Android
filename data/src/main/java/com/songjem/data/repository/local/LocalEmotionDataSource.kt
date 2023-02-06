@@ -9,6 +9,7 @@ interface LocalEmotionDataSource {
     fun getAllEmotionReport() : Single<List<EmotionReport>>
     fun getEmotionReportMonthly(targetYearMonth : String) : Single<List<EmotionReport>>
     fun getEmotionReportDetail(targetDate : String) : Maybe<EmotionReport>
+    fun getDashboardPerWeek(startDate : String, endDate: String) : Single<List<EmotionReport>>
     fun insertEmotionReports(emtionRepots: List<EmotionReport>): Completable
     fun insertEmotionReport(emotionReport: EmotionReport): Completable
     fun deleteEmotionReport(targetDate : String) : Completable

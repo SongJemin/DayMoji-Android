@@ -71,6 +71,16 @@ class EmotionRepositoryImpl @Inject constructor(
             }
     }
 
+    override fun getDashboardPerWeek(startDate: String, endDate: String) : Single<List<EmotionReportItem>> {
+        Log.d("songjem", "startDate = $startDate, endDate = $endDate")
+        return localEmotionDataSource.getDashboardPerWeek(startDate, endDate)
+            .onErrorReturn { listOf() }
+            .flatMap {
+                Log.d("songjem", "DashboardPerWeekList = $it")
+                Single.just(mapperToEmotionList(it))
+            }
+    }
+
     override fun deleteEmotionReport(targetDate: String): Completable {
         Log.d("songjem", "delete targetDate = $targetDate")
         return localEmotionDataSource.deleteEmotionReport(targetDate)

@@ -21,6 +21,11 @@ interface EmotionRepository {
         targetDate : String
     ) : Maybe<EmotionReportItem>
 
+    fun getDashboardPerWeek(
+        startDate : String,
+        endDate : String
+    ) : Single<List<EmotionReportItem>>
+
     fun deleteEmotionReport(
         targetDate : String
     ) : Completable
