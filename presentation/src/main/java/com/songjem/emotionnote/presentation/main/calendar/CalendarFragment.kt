@@ -34,8 +34,6 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var sosoDayList : ArrayList<CalendarDay> = ArrayList()
     private var loveDayList : ArrayList<CalendarDay> = ArrayList()
     private val emotionSaveDay = BooleanArray(32)
-    private val saveDate = "SELECTED_DATE"
-    private var selectedDate : String? = null
 
     private lateinit var getResult : ActivityResultLauncher<Intent>
 

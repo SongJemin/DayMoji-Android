@@ -16,6 +16,8 @@ class LocalEmotionDataSourceImpl @Inject constructor(private val emotionDao: Emo
 
     override fun getEmotionReportDetail(targetDate: String): Maybe<EmotionReport> = emotionDao.getEmotionReportDetail(targetDate)
 
+    override fun getDashboardPerWeek(startDate: String, endDate: String): Single<List<EmotionReport>> = emotionDao.getDashboardPerWeek(startDate, endDate)
+
     override fun insertEmotionReports(emotionReports: List<EmotionReport>): Completable = emotionDao.insertEmotionReports(emotionReports)
 
     override fun insertEmotionReport(emotionReport: EmotionReport): Completable = emotionDao.insertEmotionReport(emotionReport)

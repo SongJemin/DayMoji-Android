@@ -86,18 +86,21 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
     private fun setButtonClick() {
         binding.btnSaveAnalysisRecord.setOnClickListener {
             val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
-            val emotionStatus = binding.tvEmotionStatusResultRecord.text.toString()
-            val reportContent = binding.etDailyEmotionRecord.text.toString()
-            val positive = binding.tvEmotionPositiveResultRecord.text.toString().toFloat()
-            val negative = binding.tvEmotionNegativeResultRecord.text.toString().toFloat()
-            val neutral = binding.tvEmotionNeutralResultRecord.text.toString().toFloat()
+            val emotionStatus : String = binding.tvEmotionStatusResultRecord.text.toString()
+            val reportContent : String? = binding.etDailyEmotionRecord.text?.toString()
+            val positiveString : String = binding.tvEmotionPositiveResultRecord.text.toString()
+            val negativeString : String = binding.tvEmotionNegativeResultRecord.text.toString()
+            val neutralString : String = binding.tvEmotionNeutralResultRecord.text.toString()
 
-            val emotionReport = EmotionReportItem(targetDate = targetDate, reportContent = reportContent
-            , emotionStatus = emotionStatus, positive = positive, negative = negative
-            , neutral = neutral, firstReportDate = currentDate, lastReportDate = currentDate)
+            if(emotionStatus != "No Data" && reportContent != null && positiveString != "No Data" && negativeString != "No Data" && neutralString != "No Data") {
+                val emotionReport = EmotionReportItem(targetDate = targetDate, reportContent = reportContent, emotionStatus = emotionStatus, positive = positiveString.toFloat(),
+                    negative = negativeString.toFloat(), neutral = neutralString.toFloat(), firstReportDate = currentDate, lastReportDate = currentDate)
 
-            Log.d("songjem", "INSERT, emotionReportItem = $emotionReport")
-            viewModel.insertEmotionReport(emotionReport)
+                Log.d("songjem", "INSERT, emotionReportItem = $emotionReport")
+                viewModel.insertEmotionReport(emotionReport)
+            } else {
+                Toast.makeText(applicationContext, "감정분석한 후에 저장해주세요", Toast.LENGTH_SHORT).show()
+            }
         }
     }
 
