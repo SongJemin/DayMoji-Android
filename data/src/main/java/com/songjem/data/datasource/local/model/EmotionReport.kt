@@ -15,5 +15,6 @@ data class EmotionReport (
     @ColumnInfo(name = "score") val score : Float? = null,
     @ColumnInfo(name = "magnitude") val magnitude : Float? = null,
     @ColumnInfo(name = "firstReportDate") val firstReportDate : String,
-    @ColumnInfo(name = "lastReportDate") val lastReportDate : String
+    @ColumnInfo(name = "lastReportDate") val lastReportDate : String,
+    @ColumnInfo(name = "isSecretMode") val isSecretMode : Boolean
 )

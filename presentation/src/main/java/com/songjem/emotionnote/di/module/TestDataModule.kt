@@ -2,6 +2,8 @@ package com.songjem.emotionnote.di.module
 
 import android.content.Context
 import androidx.room.Room
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.songjem.data.datasource.local.dao.EmotionDao
 import com.songjem.data.datasource.local.database.EmotionDatabase
 import com.songjem.data.datasource.remote.api.NaverApi
@@ -40,7 +42,13 @@ object TestDataModule {
             context,
             EmotionDatabase::class.java,
             "EmotionDiary.db"
-        ).build()
+        ).addMigrations(MIGRATION_1_2).build()
+    }
+
+    private val MIGRATION_1_2 = object : Migration(1, 2) {
+        override fun migrate(database: SupportSQLiteDatabase) {
+            database.execSQL("ALTER TABLE 'EmotionReport' ADD COLUMN 'isSecretMode' INTEGER NOT NULL DEFAULT 0")
+        }
     }
 
     @Singleton
