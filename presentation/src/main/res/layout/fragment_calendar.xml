@@ -44,6 +44,7 @@
                 />
 
             <LinearLayout
+                android:id="@+id/ll_secret_switch_calendar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
@@ -73,15 +74,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/tv_date_calendar"
+                android:visibility="invisible"
                 >
                 <ImageView
-                    android:layout_width="160dp"
-                    android:layout_height="160dp"
+                    android:layout_width="140dp"
+                    android:layout_height="140dp"
                     android:src="@drawable/record_lock"
                     android:layout_marginTop="50dp"
                     android:layout_centerHorizontal="true"
                     />
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_no_data_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/tv_date_calendar"
+                android:visibility="invisible"
+                >
+                <ImageView
+                    android:id="@+id/iv_nodata_calendar"
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:src="@drawable/report_nodata"
+                    android:layout_marginTop="50dp"
+                    android:layout_centerHorizontal="true"
+                    />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No Data"
+                    android:layout_below="@+id/iv_nodata_calendar"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="10dp"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/black"
+                    />
+            </RelativeLayout>
+
             <LinearLayout
                 android:id="@+id/ll_secret_off_calendar"
                 android:layout_width="match_parent"
@@ -89,7 +120,6 @@
                 android:orientation="vertical"
                 android:layout_below="@+id/tv_date_calendar"
                 android:weightSum="100"
-                android:visibility="invisible"
                 >
                 <RelativeLayout
                     android:layout_width="match_parent"
@@ -106,7 +136,6 @@
                         android:layout_centerVertical="true"
                         />
                 </RelativeLayout>
-
                 <LinearLayout
                     android:id="@+id/ll_emotion_level_calendar"
                     android:layout_width="match_parent"

@@ -138,26 +138,29 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
         viewModel.emotionReport.observe(this) { report ->
             Log.d("songjem", "Load EmotionReport One Data = $report")
-            binding.swSecretCalendar.isChecked = report.isSecretMode
-            changeSecretSwitch(binding.swSecretCalendar.isChecked)
+            binding.apply {
+                swSecretCalendar.isChecked = report.isSecretMode
+                changeSecretSwitch(swSecretCalendar.isChecked)
+                tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
 
-            binding.tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
-            binding.tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
-            binding.tvPositiveLevelCalendar.text = "긍정수치 : ${report.positive}"
-            binding.tvNegativeLevelCalendar.text = "부정수치 : ${report.negative}"
-            binding.tvNeutralLevelCalendar.text = "중립수치 : ${report.neutral}"
-            binding.tvReportContentCalendar.text = report.reportContent
-
-            binding.btnAddRecordCalendar.visibility = View.INVISIBLE
-            binding.btnDeleteRecordCalendar.visibility = View.VISIBLE
-            binding.btnEditRecordCalendar.visibility = View.VISIBLE
+                tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
+                tvPositiveLevelCalendar.text = "긍정수치 : ${report.positive}"
+                tvNegativeLevelCalendar.text = "부정수치 : ${report.negative}"
+                tvNeutralLevelCalendar.text = "중립수치 : ${report.neutral}"
+                tvReportContentCalendar.text = report.reportContent
+                btnAddRecordCalendar.visibility = View.INVISIBLE
+                btnDeleteRecordCalendar.visibility = View.VISIBLE
+                btnEditRecordCalendar.visibility = View.VISIBLE
+            }
         }
 
         viewModel.noDataAlarm.observe(this) {
             clearDetailContent()
-            binding.btnAddRecordCalendar.visibility = View.VISIBLE
-            binding.btnDeleteRecordCalendar.visibility = View.INVISIBLE
-            binding.btnEditRecordCalendar.visibility = View.INVISIBLE
+            binding.apply {
+                btnAddRecordCalendar.visibility = View.VISIBLE
+                btnDeleteRecordCalendar.visibility = View.INVISIBLE
+                btnEditRecordCalendar.visibility = View.INVISIBLE
+            }
         }
 
         viewModel.deleteDate.observe(this) { date ->
@@ -167,9 +170,10 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             var month = if ((date.substring(4,6).toInt() - 1) <= 9) "0" + (date.substring(4,6).toInt() - 1) else (date.substring(4,6).toInt() - 1).toString()
             val day = date.substring(6,8)
             val deleteDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
-
-            binding.cvReportCalendar.removeDecorators()
-            binding.cvReportCalendar.addDecorators(DayBackgroundDecorator(requireContext()))
+            binding.apply {
+                cvReportCalendar.removeDecorators()
+                cvReportCalendar.addDecorators(DayBackgroundDecorator(requireContext()))
+            }
             month = if (month.toInt() + 1 <= 9) "0" + (month.toInt() + 1) else (month.toInt() + 1).toString()
             viewModel.getEmotionReportMonthly(year + month)
             getDailyEmotionDetail(deleteDate)
@@ -251,6 +255,8 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
     private fun changeSecretSwitch(isChecked : Boolean) {
         binding.apply {
+            rlNoDataCalendar.visibility = View.INVISIBLE
+            llSecretSwitchCalendar.visibility = View.VISIBLE
             if(isChecked) {
                 tvSecretCalendar.text = "secret ON"
                 rlSecretOnCalendar.visibility = View.VISIBLE
@@ -266,14 +272,10 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     @SuppressLint("SetTextI18n")
     private fun clearDetailContent() {
         binding.apply {
-            tvDateCalendar.text = ""
-            tvEmotionStatusCalendar.text = ""
-            tvPositiveLevelCalendar.text = ""
-            tvNegativeLevelCalendar.text = ""
-            tvNeutralLevelCalendar.text = ""
-            tvReportContentCalendar.text = "No Data"
-            swSecretCalendar.isChecked = false
+            rlNoDataCalendar.visibility = View.VISIBLE
+            rlSecretOnCalendar.visibility = View.INVISIBLE
+            llSecretOffCalendar.visibility = View.INVISIBLE
+            llSecretSwitchCalendar.visibility = View.INVISIBLE
         }
-        changeSecretSwitch(false)
     }
 }
