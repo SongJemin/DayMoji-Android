@@ -85,12 +85,18 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         }
 
         viewModel.emotionReport.observe(this) { report ->
-            binding.etDailyEmotionRecord.setText(report.reportContent)
-            binding.tvEmotionStatusResultRecord.text = report.emotionStatus
-            binding.tvEmotionPositiveResultRecord.text = report.positive.toString()
-            binding.tvEmotionNegativeResultRecord.text = report.negative.toString()
-            binding.tvEmotionNeutralResultRecord.text = report.neutral.toString()
-            binding.btnSaveAnalysisRecord.text = "수정하기"
+            binding.apply {
+                etDailyEmotionRecord.setText(report.reportContent)
+                tvEmotionStatusResultRecord.text = report.emotionStatus
+                tvEmotionPositiveResultRecord.text = report.positive.toString()
+                tvEmotionNegativeResultRecord.text = report.negative.toString()
+                tvEmotionNeutralResultRecord.text = report.neutral.toString()
+                btnSaveAnalysisRecord.text = "수정하기"
+                swSecretRecord.isChecked = report.isSecretMode
+
+                if(swSecretRecord.isChecked) tvSecretRecord.text = "secret ON"
+                else tvSecretRecord.text = "secret OFF"
+            }
         }
     }
 
