@@ -40,6 +40,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     @SuppressLint("SetTextI18n")
     override fun initView() {
         binding.apply {
+
+            swSecretCalendar.setOnCheckedChangeListener { _, isChecked ->
+                changeSecretSwitch(isChecked)
+            }
+
             cvReportCalendar.setOnDateChangedListener { widget, date, selected ->
                 cvReportCalendar.selectedDate = date
                 getDailyEmotionDetail(date)
@@ -133,6 +138,9 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
         viewModel.emotionReport.observe(this) { report ->
             Log.d("songjem", "Load EmotionReport One Data = $report")
+            binding.swSecretCalendar.isChecked = report.isSecretMode
+            changeSecretSwitch(binding.swSecretCalendar.isChecked)
+
             binding.tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
             binding.tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
             binding.tvPositiveLevelCalendar.text = "긍정수치 : ${report.positive}"
@@ -241,13 +249,31 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         return year + month + day
     }
 
+    private fun changeSecretSwitch(isChecked : Boolean) {
+        binding.apply {
+            if(isChecked) {
+                tvSecretCalendar.text = "secret ON"
+                rlSecretOnCalendar.visibility = View.VISIBLE
+                llSecretOffCalendar.visibility = View.INVISIBLE
+            } else {
+                tvSecretCalendar.text = "secret OFF"
+                llSecretOffCalendar.visibility = View.VISIBLE
+                rlSecretOnCalendar.visibility = View.INVISIBLE
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun clearDetailContent() {
-        binding.tvDateCalendar.text = ""
-        binding.tvEmotionStatusCalendar.text = ""
-        binding.tvPositiveLevelCalendar.text = ""
-        binding.tvNegativeLevelCalendar.text = ""
-        binding.tvNeutralLevelCalendar.text = ""
-        binding.tvReportContentCalendar.text = "No Data"
+        binding.apply {
+            tvDateCalendar.text = ""
+            tvEmotionStatusCalendar.text = ""
+            tvPositiveLevelCalendar.text = ""
+            tvNegativeLevelCalendar.text = ""
+            tvNeutralLevelCalendar.text = ""
+            tvReportContentCalendar.text = "No Data"
+            swSecretCalendar.isChecked = false
+        }
+        changeSecretSwitch(false)
     }
 }

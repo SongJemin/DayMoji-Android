@@ -101,7 +101,7 @@ class EmotionRepositoryImpl @Inject constructor(
         val currentDateTime = DateUtil.currentDate().dateToString("yyyy.MM.dd kk:mm:ss E", Locale("ko", "KR"))
         val emotionReport = EmotionReport(emotionReportItem.targetDate, emotionReportItem.reportContent
             , emotionReportItem.emotionStatus, emotionReportItem.positive, emotionReportItem.negative, emotionReportItem.neutral, null, null
-            , currentDateTime, currentDateTime, false)
+            , currentDateTime, currentDateTime, emotionReportItem.isSecretMode)
         return localEmotionDataSource.insertEmotionReport(emotionReport)
     }
 

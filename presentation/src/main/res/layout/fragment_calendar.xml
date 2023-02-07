@@ -40,19 +40,61 @@
                 android:textSize="15sp"
                 android:layout_marginTop="15dp"
                 android:layout_marginStart="15dp"
+                android:textStyle="bold"
                 />
+
             <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="9dp"
+                android:layout_marginEnd="15dp"
+                >
+                <TextView
+                    android:id="@+id/tv_secret_calendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="secret OFF"
+                    android:textSize="15sp"
+                    android:layout_marginEnd="3dp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="1dp"
+                    />
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/sw_secret_calendar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="10dp"
+                    />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/rl_secret_on_calendar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/tv_date_calendar"
+                >
+                <ImageView
+                    android:layout_width="160dp"
+                    android:layout_height="160dp"
+                    android:src="@drawable/record_lock"
+                    android:layout_marginTop="50dp"
+                    android:layout_centerHorizontal="true"
+                    />
+            </RelativeLayout>
+            <LinearLayout
+                android:id="@+id/ll_secret_off_calendar"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:layout_below="@+id/tv_date_calendar"
                 android:weightSum="100"
+                android:visibility="invisible"
                 >
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="0dp"
-                    android:layout_weight="35"
-                    >
+                    android:layout_weight="35">
                     <TextView
                         android:id="@+id/tv_report_content_calendar"
                         android:layout_width="wrap_content"
