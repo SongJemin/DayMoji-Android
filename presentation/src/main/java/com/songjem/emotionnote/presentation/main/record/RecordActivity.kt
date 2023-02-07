@@ -32,11 +32,22 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         addOrEdit = intent.getStringExtra("addOrEdit")!!
         Log.d("songjem", "RecordActivity, getIntent targetDate = $targetDate")
         Log.d("songjem", "RecordActivity, getIntent addOrEdit = $addOrEdit")
-        binding.tvTargetDateCalendar.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
+        binding.tvTargetDateRecord.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
 
         if(addOrEdit == "EDIT") getDailyEmotionDetail(targetDate)
         setObserve()
         setButtonClick()
+        setSwitch()
+    }
+
+    private fun setSwitch() {
+        binding.swSecretRecord.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                binding.tvSecretRecord.text = "secret ON"
+            } else {
+                binding.tvSecretRecord.text = "secret OFF"
+            }
+        }
     }
 
     private fun getDailyEmotionDetail(targetDate : String) {
