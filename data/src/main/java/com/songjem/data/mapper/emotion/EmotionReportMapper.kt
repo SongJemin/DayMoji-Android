@@ -17,7 +17,8 @@ fun mapperToEmotionList(emotionReportEntities: List<EmotionReport>): List<Emotio
             it.score,
             it.magnitude,
             it.firstReportDate,
-            it.lastReportDate
+            it.lastReportDate,
+            it.isSecretMode
         )
     }
 }
@@ -33,7 +34,8 @@ fun mapperToEmotion(emotionReportEntity: EmotionReport): EmotionReportItem {
         emotionReportEntity.score,
         emotionReportEntity.magnitude,
         emotionReportEntity.firstReportDate,
-        emotionReportEntity.lastReportDate
+        emotionReportEntity.lastReportDate,
+        emotionReportEntity.isSecretMode
     )
 }
 

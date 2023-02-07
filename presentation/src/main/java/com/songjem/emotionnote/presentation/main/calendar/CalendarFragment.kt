@@ -2,10 +2,13 @@ package com.songjem.emotionnote.presentation.main.calendar
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.DialogInterface
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,12 +37,18 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var sosoDayList : ArrayList<CalendarDay> = ArrayList()
     private var loveDayList : ArrayList<CalendarDay> = ArrayList()
     private val emotionSaveDay = BooleanArray(32)
+    private var isShowPasswdDialog = true
 
     private lateinit var getResult : ActivityResultLauncher<Intent>
 
     @SuppressLint("SetTextI18n")
     override fun initView() {
         binding.apply {
+
+            swSecretCalendar.setOnCheckedChangeListener { _, isChecked ->
+                changeSecretSwitch(isChecked)
+            }
+
             cvReportCalendar.setOnDateChangedListener { widget, date, selected ->
                 cvReportCalendar.selectedDate = date
                 getDailyEmotionDetail(date)
@@ -133,23 +142,34 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
 
         viewModel.emotionReport.observe(this) { report ->
             Log.d("songjem", "Load EmotionReport One Data = $report")
-            binding.tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
-            binding.tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
-            binding.tvPositiveLevelCalendar.text = "긍정수치 : ${report.positive}"
-            binding.tvNegativeLevelCalendar.text = "부정수치 : ${report.negative}"
-            binding.tvNeutralLevelCalendar.text = "중립수치 : ${report.neutral}"
-            binding.tvReportContentCalendar.text = report.reportContent
+            binding.apply {
+                isShowPasswdDialog = false
+                swSecretCalendar.isChecked = report.isSecretMode
+                if(swSecretCalendar.isChecked) llSecretSwitchCalendar.visibility = View.VISIBLE
+                else llSecretSwitchCalendar.visibility = View.INVISIBLE
 
-            binding.btnAddRecordCalendar.visibility = View.INVISIBLE
-            binding.btnDeleteRecordCalendar.visibility = View.VISIBLE
-            binding.btnEditRecordCalendar.visibility = View.VISIBLE
+                changeSecretSwitch(swSecretCalendar.isChecked)
+                tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
+
+                tvEmotionStatusCalendar.text = "감정상태 : ${report.emotionStatus}"
+                tvPositiveLevelCalendar.text = "긍정수치 : ${report.positive}"
+                tvNegativeLevelCalendar.text = "부정수치 : ${report.negative}"
+                tvNeutralLevelCalendar.text = "중립수치 : ${report.neutral}"
+                tvReportContentCalendar.text = report.reportContent
+                btnAddRecordCalendar.visibility = View.INVISIBLE
+                btnDeleteRecordCalendar.visibility = View.VISIBLE
+                btnEditRecordCalendar.visibility = View.VISIBLE
+                isShowPasswdDialog = true
+            }
         }
 
         viewModel.noDataAlarm.observe(this) {
             clearDetailContent()
-            binding.btnAddRecordCalendar.visibility = View.VISIBLE
-            binding.btnDeleteRecordCalendar.visibility = View.INVISIBLE
-            binding.btnEditRecordCalendar.visibility = View.INVISIBLE
+            binding.apply {
+                btnAddRecordCalendar.visibility = View.VISIBLE
+                btnDeleteRecordCalendar.visibility = View.INVISIBLE
+                btnEditRecordCalendar.visibility = View.INVISIBLE
+            }
         }
 
         viewModel.deleteDate.observe(this) { date ->
@@ -159,9 +179,10 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
             var month = if ((date.substring(4,6).toInt() - 1) <= 9) "0" + (date.substring(4,6).toInt() - 1) else (date.substring(4,6).toInt() - 1).toString()
             val day = date.substring(6,8)
             val deleteDate = CalendarDay.from(year.toInt(), month.toInt(), day.toInt())
-
-            binding.cvReportCalendar.removeDecorators()
-            binding.cvReportCalendar.addDecorators(DayBackgroundDecorator(requireContext()))
+            binding.apply {
+                cvReportCalendar.removeDecorators()
+                cvReportCalendar.addDecorators(DayBackgroundDecorator(requireContext()))
+            }
             month = if (month.toInt() + 1 <= 9) "0" + (month.toInt() + 1) else (month.toInt() + 1).toString()
             viewModel.getEmotionReportMonthly(year + month)
             getDailyEmotionDetail(deleteDate)
@@ -241,13 +262,53 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         return year + month + day
     }
 
+    private fun changeSecretSwitch(isChecked : Boolean) {
+        binding.apply {
+            rlNoDataCalendar.visibility = View.INVISIBLE
+//            llSecretSwitchCalendar.visibility = View.VISIBLE
+            if(isChecked) {
+                tvSecretCalendar.text = "secret ON"
+                rlSecretOnCalendar.visibility = View.VISIBLE
+                llSecretOffCalendar.visibility = View.INVISIBLE
+            } else {
+                if(isShowPasswdDialog) {
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.apply {
+                        setTitle("잠금 패스워드")
+                        setView(layoutInflater.inflate(R.layout.dialog_lock_password, null))
+                        setPositiveButton("확인") { dialog, _ ->
+                            val etLockPasswd = (dialog as AlertDialog).findViewById<EditText>(R.id.et_lock_passwd_lock_dialog)
+                            if(etLockPasswd!!.text.toString() == "sjm") {
+                                tvSecretCalendar.text = "secret OFF"
+                                llSecretOffCalendar.visibility = View.VISIBLE
+                                rlSecretOnCalendar.visibility = View.INVISIBLE
+                                dialog.dismiss()
+                            } else {
+                                binding.swSecretCalendar.isChecked = !binding.swSecretCalendar.isChecked
+                                Toast.makeText(requireContext(), "패스워드가 틀렸습니다", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        setNegativeButton("취소") { _, _ ->
+                            binding.swSecretCalendar.isChecked = !binding.swSecretCalendar.isChecked
+                        }
+                        show()
+                    }
+                } else {
+                    tvSecretCalendar.text = "secret OFF"
+                    llSecretOffCalendar.visibility = View.VISIBLE
+                    rlSecretOnCalendar.visibility = View.INVISIBLE
+                }
+            }
+        }
+    }
+
     @SuppressLint("SetTextI18n")
     private fun clearDetailContent() {
-        binding.tvDateCalendar.text = ""
-        binding.tvEmotionStatusCalendar.text = ""
-        binding.tvPositiveLevelCalendar.text = ""
-        binding.tvNegativeLevelCalendar.text = ""
-        binding.tvNeutralLevelCalendar.text = ""
-        binding.tvReportContentCalendar.text = "No Data"
+        binding.apply {
+            rlNoDataCalendar.visibility = View.VISIBLE
+            rlSecretOnCalendar.visibility = View.INVISIBLE
+            llSecretOffCalendar.visibility = View.INVISIBLE
+            llSecretSwitchCalendar.visibility = View.INVISIBLE
+        }
     }
 }

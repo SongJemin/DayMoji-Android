@@ -32,11 +32,22 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         addOrEdit = intent.getStringExtra("addOrEdit")!!
         Log.d("songjem", "RecordActivity, getIntent targetDate = $targetDate")
         Log.d("songjem", "RecordActivity, getIntent addOrEdit = $addOrEdit")
-        binding.tvTargetDateCalendar.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
+        binding.tvTargetDateRecord.text = targetDate.substring(0,4) + ". " + targetDate.substring(4,6) + ". " + targetDate.substring(6,8)
 
         if(addOrEdit == "EDIT") getDailyEmotionDetail(targetDate)
         setObserve()
         setButtonClick()
+        setSwitch()
+    }
+
+    private fun setSwitch() {
+        binding.swSecretRecord.setOnCheckedChangeListener { _, isChecked ->
+            if(isChecked) {
+                binding.tvSecretRecord.text = "secret ON"
+            } else {
+                binding.tvSecretRecord.text = "secret OFF"
+            }
+        }
     }
 
     private fun getDailyEmotionDetail(targetDate : String) {
@@ -74,12 +85,18 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
         }
 
         viewModel.emotionReport.observe(this) { report ->
-            binding.etDailyEmotionRecord.setText(report.reportContent)
-            binding.tvEmotionStatusResultRecord.text = report.emotionStatus
-            binding.tvEmotionPositiveResultRecord.text = report.positive.toString()
-            binding.tvEmotionNegativeResultRecord.text = report.negative.toString()
-            binding.tvEmotionNeutralResultRecord.text = report.neutral.toString()
-            binding.btnSaveAnalysisRecord.text = "수정하기"
+            binding.apply {
+                etDailyEmotionRecord.setText(report.reportContent)
+                tvEmotionStatusResultRecord.text = report.emotionStatus
+                tvEmotionPositiveResultRecord.text = report.positive.toString()
+                tvEmotionNegativeResultRecord.text = report.negative.toString()
+                tvEmotionNeutralResultRecord.text = report.neutral.toString()
+                btnSaveAnalysisRecord.text = "수정하기"
+                swSecretRecord.isChecked = report.isSecretMode
+
+                if(swSecretRecord.isChecked) tvSecretRecord.text = "secret ON"
+                else tvSecretRecord.text = "secret OFF"
+            }
         }
     }
 
@@ -94,7 +111,7 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
 
             if(emotionStatus != "No Data" && reportContent != null && positiveString != "No Data" && negativeString != "No Data" && neutralString != "No Data") {
                 val emotionReport = EmotionReportItem(targetDate = targetDate, reportContent = reportContent, emotionStatus = emotionStatus, positive = positiveString.toFloat(),
-                    negative = negativeString.toFloat(), neutral = neutralString.toFloat(), firstReportDate = currentDate, lastReportDate = currentDate)
+                    negative = negativeString.toFloat(), neutral = neutralString.toFloat(), firstReportDate = currentDate, lastReportDate = currentDate, isSecretMode = binding.swSecretRecord.isChecked)
 
                 Log.d("songjem", "INSERT, emotionReportItem = $emotionReport")
                 viewModel.insertEmotionReport(emotionReport)

@@ -10,5 +10,6 @@ data class EmotionReportItem (
     val score : Float? = null,
     val magnitude : Float? = null,
     val firstReportDate : String = "",
-    val lastReportDate : String = ""
+    val lastReportDate : String = "",
+    val isSecretMode : Boolean
 )
