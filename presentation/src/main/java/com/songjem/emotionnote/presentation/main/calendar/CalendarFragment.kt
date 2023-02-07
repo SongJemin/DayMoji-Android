@@ -2,10 +2,13 @@ package com.songjem.emotionnote.presentation.main.calendar
 
 import android.annotation.SuppressLint
 import android.app.Activity.RESULT_OK
+import android.content.DialogInterface
 import android.content.Intent
+import android.opengl.Visibility
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -34,6 +37,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private var sosoDayList : ArrayList<CalendarDay> = ArrayList()
     private var loveDayList : ArrayList<CalendarDay> = ArrayList()
     private val emotionSaveDay = BooleanArray(32)
+    private var isShowPasswdDialog = true
 
     private lateinit var getResult : ActivityResultLauncher<Intent>
 
@@ -139,7 +143,11 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
         viewModel.emotionReport.observe(this) { report ->
             Log.d("songjem", "Load EmotionReport One Data = $report")
             binding.apply {
+                isShowPasswdDialog = false
                 swSecretCalendar.isChecked = report.isSecretMode
+                if(swSecretCalendar.isChecked) llSecretSwitchCalendar.visibility = View.VISIBLE
+                else llSecretSwitchCalendar.visibility = View.INVISIBLE
+
                 changeSecretSwitch(swSecretCalendar.isChecked)
                 tvDateCalendar.text = (report.targetDate).substring(0, 4) + ". " + (report.targetDate).substring(4, 6) + ". " + report.targetDate.substring(6, 8)
 
@@ -151,6 +159,7 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
                 btnAddRecordCalendar.visibility = View.INVISIBLE
                 btnDeleteRecordCalendar.visibility = View.VISIBLE
                 btnEditRecordCalendar.visibility = View.VISIBLE
+                isShowPasswdDialog = true
             }
         }
 
@@ -256,15 +265,39 @@ class CalendarFragment : BaseFragment<FragmentCalendarBinding>(R.layout.fragment
     private fun changeSecretSwitch(isChecked : Boolean) {
         binding.apply {
             rlNoDataCalendar.visibility = View.INVISIBLE
-            llSecretSwitchCalendar.visibility = View.VISIBLE
+//            llSecretSwitchCalendar.visibility = View.VISIBLE
             if(isChecked) {
                 tvSecretCalendar.text = "secret ON"
                 rlSecretOnCalendar.visibility = View.VISIBLE
                 llSecretOffCalendar.visibility = View.INVISIBLE
             } else {
-                tvSecretCalendar.text = "secret OFF"
-                llSecretOffCalendar.visibility = View.VISIBLE
-                rlSecretOnCalendar.visibility = View.INVISIBLE
+                if(isShowPasswdDialog) {
+                    val builder = AlertDialog.Builder(requireContext())
+                    builder.apply {
+                        setTitle("잠금 패스워드")
+                        setView(layoutInflater.inflate(R.layout.dialog_lock_password, null))
+                        setPositiveButton("확인") { dialog, _ ->
+                            val etLockPasswd = (dialog as AlertDialog).findViewById<EditText>(R.id.et_lock_passwd_lock_dialog)
+                            if(etLockPasswd!!.text.toString() == "sjm") {
+                                tvSecretCalendar.text = "secret OFF"
+                                llSecretOffCalendar.visibility = View.VISIBLE
+                                rlSecretOnCalendar.visibility = View.INVISIBLE
+                                dialog.dismiss()
+                            } else {
+                                binding.swSecretCalendar.isChecked = !binding.swSecretCalendar.isChecked
+                                Toast.makeText(requireContext(), "패스워드가 틀렸습니다", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        setNegativeButton("취소") { _, _ ->
+                            binding.swSecretCalendar.isChecked = !binding.swSecretCalendar.isChecked
+                        }
+                        show()
+                    }
+                } else {
+                    tvSecretCalendar.text = "secret OFF"
+                    llSecretOffCalendar.visibility = View.VISIBLE
+                    rlSecretOnCalendar.visibility = View.INVISIBLE
+                }
             }
         }
     }
