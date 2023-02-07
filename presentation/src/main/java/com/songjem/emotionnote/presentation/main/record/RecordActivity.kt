@@ -105,7 +105,7 @@ class RecordActivity : BaseActivity<ActivityRecordBinding>(R.layout.activity_rec
 
             if(emotionStatus != "No Data" && reportContent != null && positiveString != "No Data" && negativeString != "No Data" && neutralString != "No Data") {
                 val emotionReport = EmotionReportItem(targetDate = targetDate, reportContent = reportContent, emotionStatus = emotionStatus, positive = positiveString.toFloat(),
-                    negative = negativeString.toFloat(), neutral = neutralString.toFloat(), firstReportDate = currentDate, lastReportDate = currentDate, isSecretMode = false)
+                    negative = negativeString.toFloat(), neutral = neutralString.toFloat(), firstReportDate = currentDate, lastReportDate = currentDate, isSecretMode = binding.swSecretRecord.isChecked)
 
                 Log.d("songjem", "INSERT, emotionReportItem = $emotionReport")
                 viewModel.insertEmotionReport(emotionReport)
