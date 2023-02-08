@@ -1,22 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
             name="viewModel"
             type="com.songjem.emotionnote.presentation.main.dashboard.DashboardViewModel" />
     </data>
-    <RelativeLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
+        
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_left_content_dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="25dp"
+            />
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/gl_right_content_dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="25dp"
+            />
+
+        <TextView
+            android:id="@+id/tv_title_dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="감정기록 그래프"
+            android:textSize="30sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.05"
+            android:textStyle="bold"
+            android:textColor="@color/black"
+            />
+
+        <Button
+            android:id="@+id/btn_date_filter_dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            app:layout_constraintStart_toStartOf="@+id/gl_left_content_dashboard"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_dashboard"
+            android:layout_marginTop="10dp"
+            android:layout_marginStart="10dp"
+            android:text="날짜"
+            android:textColor="#242424"
+            android:textSize="13dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/background_linegraph_filter"
+            />
+
+        <Button
+            android:id="@+id/btn_emotion_filter_dashboard"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            app:layout_constraintStart_toEndOf="@+id/btn_date_filter_dashboard"
+            app:layout_constraintTop_toTopOf="@+id/btn_date_filter_dashboard"
+            android:layout_marginStart="15dp"
+            android:text="감정"
+            android:textColor="#242424"
+            android:textSize="13dp"
+            app:backgroundTint="@null"
+            android:background="@drawable/background_linegraph_filter"
+            />
 
         <com.github.mikephil.charting.charts.LineChart
             android:id="@+id/mp_line_dashboard"
-            android:layout_width="360dp"
+            android:layout_width="0dp"
             android:layout_height="320dp"
-            android:layout_centerInParent="true"
-            android:visibility="visible"
-            />
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/gl_left_content_dashboard"
+            app:layout_constraintEnd_toStartOf="@+id/gl_right_content_dashboard"
+            android:visibility="visible" />
 
-    </RelativeLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
