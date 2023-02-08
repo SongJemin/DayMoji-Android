@@ -31,29 +31,65 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
     // bottomSheetBehavior
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-    private val bottomSheetLayout by lazy { requireActivity().findViewById<LinearLayout>(R.id.bottom_sheet_layout) }
-    private val weekendReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_weekend_dashboard_bottom_sheet) }
-    private val monthReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_month_dashboard_bottom_sheet) }
-    private val yearReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_year_dashboard_bottom_sheet) }
-    private val expandReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_expand_dashboard_bottom_sheet) }
-    private val hideReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_hide_dashboard_bottom_sheet) }
 
     override fun initView() {
+        setObserve()
+        getDashboardPerWeek()
+        initBottomSheet()
+        setButtonClick()
+    }
+
+    private fun setButtonClick() {
         binding.apply {
             btnDateFilterDashboard.setOnClickListener {
+                Log.d("songjem", "날짜 필터 버튼 선택")
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
 
             btnEmotionFilterDashboard.setOnClickListener {
+                Log.d("songjem", "감정 필터 버튼 선택")
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             }
         }
-        setObserve()
-        getDashboardPerWeek()
 
-        // bottomSheetBehavior setting
-        initializePersistentBottomSheet()
-        persistentBottomSheetEvent()
+        requireActivity().findViewById<Button>(R.id.btn_expand_dashboard_bottom_sheet).setOnClickListener {
+            // BottomSheet의 최대 높이만큼 보여주기
+            Log.d("songjem", "임의입력(확장) 버튼 선택")
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_hide_dashboard_bottom_sheet).setOnClickListener {
+            // BottomSheet 숨김
+            Log.d("songjem", "내리기 버튼 선택")
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_weekend_dashboard_bottom_sheet).setOnClickListener {
+            Log.d("songjem", "일주일 조회 버튼 선택")
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_month_dashboard_bottom_sheet).setOnClickListener {
+            Log.d("songjem", "한달 조회 버튼 선택")
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_year_dashboard_bottom_sheet).setOnClickListener {
+            Log.d("songjem", "일년 조회 버튼 선택")
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        binding.apply {
+            btnDateFilterDashboard.setOnClickListener {
+                Log.d("songjem", "날짜 필터 버튼 선택")
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            btnEmotionFilterDashboard.setOnClickListener {
+                Log.d("songjem", "감정 필터 버튼 선택")
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
     }
 
     private fun setObserve() {
@@ -67,10 +103,11 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
     }
 
     // Persistent BottomSheet 초기화
-    private fun initializePersistentBottomSheet() {
+    private fun initBottomSheet() {
 
-        // BottomSheetBehavior에 layout 설정
+        val bottomSheetLayout = requireActivity().findViewById<LinearLayout>(R.id.bottom_sheet_layout)
         bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨김
 
         bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
             override fun onStateChanged(bottomSheet: View, newState: Int) {
@@ -109,15 +146,6 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 // BottomSheet 숨김
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
 
-        expandReportFilterBtn.setOnClickListener {
-            // BottomSheet의 최대 높이만큼 보여주기
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
-        }
-
-        hideReportFilterBtn.setOnClickListener {
-            // BottomSheet 숨김
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-        }
     }
 
     private fun getDashboardPerWeek() {
