@@ -2,16 +2,18 @@ package com.songjem.emotionnote.presentation.main.dashboard
 
 import android.graphics.Color
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.songjem.data.util.DateUtil
 import com.songjem.data.util.DateUtil.dateToString
 import com.songjem.domain.model.DashBoardEmotionItem
@@ -27,9 +29,31 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
     private lateinit var dashBoardEmotions : List<DashBoardEmotionItem>
     override val viewModel : DashboardViewModel by activityViewModels()
 
+    // bottomSheetBehavior
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private val bottomSheetLayout by lazy { requireActivity().findViewById<LinearLayout>(R.id.bottom_sheet_layout) }
+    private val weekendReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_weekend_dashboard_bottom_sheet) }
+    private val monthReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_month_dashboard_bottom_sheet) }
+    private val yearReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_year_dashboard_bottom_sheet) }
+    private val expandReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_expand_dashboard_bottom_sheet) }
+    private val hideReportFilterBtn by lazy { requireActivity().findViewById<Button>(R.id.btn_hide_dashboard_bottom_sheet) }
+
     override fun initView() {
+        binding.apply {
+            btnDateFilterDashboard.setOnClickListener {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            btnEmotionFilterDashboard.setOnClickListener {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+        }
         setObserve()
         getDashboardPerWeek()
+
+        // bottomSheetBehavior setting
+        initializePersistentBottomSheet()
+        persistentBottomSheetEvent()
     }
 
     private fun setObserve() {
@@ -39,6 +63,60 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
                 configureChartAppearance(mpLineDashboard)
                 prepareChartData(createChartData(), mpLineDashboard)
             }
+        }
+    }
+
+    // Persistent BottomSheet 초기화
+    private fun initializePersistentBottomSheet() {
+
+        // BottomSheetBehavior에 layout 설정
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                // BottomSheetBehavior state에 따른 이벤트
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        Log.d("MainActivity", "state: hidden")
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        Log.d("MainActivity", "state: expanded")
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        Log.d("MainActivity", "state: collapsed")
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        Log.d("MainActivity", "state: dragging")
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                        Log.d("MainActivity", "state: settling")
+                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        Log.d("MainActivity", "state: half expanded")
+                    }
+                }
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
+    }
+
+    // PersistentBottomSheet 내부 버튼 click event
+    private fun persistentBottomSheetEvent() {
+// BottomSheet 숨김
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+
+        expandReportFilterBtn.setOnClickListener {
+            // BottomSheet의 최대 높이만큼 보여주기
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        hideReportFilterBtn.setOnClickListener {
+            // BottomSheet 숨김
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
         }
     }
 

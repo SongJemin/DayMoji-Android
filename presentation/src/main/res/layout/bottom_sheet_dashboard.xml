@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/bottom_sheet_layout"
+    android:layout_width="match_parent"
+    android:layout_height="270dp"
+    android:background="@drawable/background_dashboard_bottom_sheet"
+    app:behavior_hideable="true"
+    app:behavior_peekHeight="220dp"
+    app:behavior_draggable="false"
+    android:orientation="vertical"
+    android:padding="10dp"
+    android:clickable="true"
+    android:focusable="true"
+    app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+    <Button
+        android:id="@+id/btn_weekend_dashboard_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="일주일"
+        android:layout_marginTop="5dp"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        app:backgroundTint="@null"
+        android:background="@color/white"
+        />
+
+    <Button
+        android:id="@+id/btn_month_dashboard_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="한달"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        app:backgroundTint="@null"
+        android:background="@color/white"
+        />
+
+    <Button
+        android:id="@+id/btn_year_dashboard_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="일년"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        app:backgroundTint="@null"
+        android:background="@color/white"
+        />
+
+    <Button
+        android:id="@+id/btn_expand_dashboard_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="임의입력(확장하기)"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        app:backgroundTint="@null"
+        android:background="@color/white"
+        />
+
+    <Button
+        android:id="@+id/btn_hide_dashboard_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:text="내리기"
+        android:textSize="15sp"
+        android:textColor="@color/black"
+        app:backgroundTint="@null"
+        android:background="@color/white"
+        />
+
+</LinearLayout>
