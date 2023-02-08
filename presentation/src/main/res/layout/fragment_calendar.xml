@@ -196,7 +196,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="70dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/tab_record_plus_icon"
                 android:visibility="invisible"
                 />
@@ -207,7 +207,7 @@
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_marginEnd="15dp"
-                android:layout_marginBottom="70dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/delete_record_icon"
                 android:visibility="visible"
                 />
@@ -217,7 +217,7 @@
                 android:layout_height="40dp"
                 android:layout_alignParentBottom="true"
                 android:layout_marginEnd="10dp"
-                android:layout_marginBottom="70dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/edit_record_icon"
                 android:visibility="visible"
                 android:layout_toStartOf="@+id/btn_delete_record_calendar"

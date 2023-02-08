@@ -30,11 +30,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(R.layout.activity_main) {
         dashboardFragment = DashboardFragment()
         supportFragmentManager.beginTransaction().replace(R.id.fl_container_main, calendarFragment).commit()
 
-        binding.btnTestpageMain.setOnClickListener {
-            val intent = Intent(this, TestActivity::class.java)
-            startActivity(intent)
-        }
-
         val bottomNavigationView = findViewById<NavigationBarView>(R.id.bn_navigator_main)
         bottomNavigationView.setOnItemSelectedListener (
             object: NavigationBarView.OnItemSelectedListener {
