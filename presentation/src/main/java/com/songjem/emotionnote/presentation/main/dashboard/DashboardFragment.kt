@@ -2,16 +2,18 @@ package com.songjem.emotionnote.presentation.main.dashboard
 
 import android.graphics.Color
 import android.util.Log
+import android.view.View
+import android.widget.Button
+import android.widget.LinearLayout
 import androidx.fragment.app.activityViewModels
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.components.AxisBase
 import com.github.mikephil.charting.components.Legend
 import com.github.mikephil.charting.components.XAxis
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData
 import com.github.mikephil.charting.data.LineDataSet
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
-import com.github.mikephil.charting.formatter.ValueFormatter
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.songjem.data.util.DateUtil
 import com.songjem.data.util.DateUtil.dateToString
 import com.songjem.domain.model.DashBoardEmotionItem
@@ -27,9 +29,66 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
     private lateinit var dashBoardEmotions : List<DashBoardEmotionItem>
     override val viewModel : DashboardViewModel by activityViewModels()
 
+    // bottomSheetBehavior
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
+    private lateinit var startMonthDay : String
+    private lateinit var endMonthDay : String
+
     override fun initView() {
         setObserve()
         getDashboardPerWeek()
+        initBottomSheet()
+        setButtonClick()
+    }
+
+    private fun setButtonClick() {
+        binding.apply {
+            rlDateFilterDashboard.setOnClickListener {
+                Log.d("songjem", "날짜 필터 버튼 선택")
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            rlEmotionFilterDashboard.setOnClickListener {
+                Log.d("songjem", "감정 필터 버튼 선택")
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            }
+
+            viewBackgroundFilterDashboard.setOnClickListener {
+                viewBackgroundFilterDashboard.visibility = View.INVISIBLE
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            }
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_expand_dashboard_bottom_sheet).setOnClickListener {
+            // BottomSheet의 최대 높이만큼 보여주기
+            Log.d("songjem", "임의입력(확장) 버튼 선택")
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_EXPANDED
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_hide_dashboard_bottom_sheet).setOnClickListener {
+            // BottomSheet 숨김
+            Log.d("songjem", "내리기 버튼 선택")
+            binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_weekend_dashboard_bottom_sheet).setOnClickListener {
+            Log.d("songjem", "일주일 조회 버튼 선택")
+            binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_month_dashboard_bottom_sheet).setOnClickListener {
+            Log.d("songjem", "한달 조회 버튼 선택")
+            binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
+
+        requireActivity().findViewById<Button>(R.id.btn_year_dashboard_bottom_sheet).setOnClickListener {
+            Log.d("songjem", "일년 조회 버튼 선택")
+            binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+        }
     }
 
     private fun setObserve() {
@@ -40,6 +99,51 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
                 prepareChartData(createChartData(), mpLineDashboard)
             }
         }
+    }
+
+    // Persistent BottomSheet 초기화
+    private fun initBottomSheet() {
+        val bottomSheetLayout = requireActivity().findViewById<LinearLayout>(R.id.bottom_sheet_layout)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetLayout)
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN // BottomSheet 숨김
+
+        bottomSheetBehavior.addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+
+                // BottomSheetBehavior state에 따른 이벤트
+                when (newState) {
+                    BottomSheetBehavior.STATE_HIDDEN -> {
+                        Log.d("MainActivity", "state: hidden")
+                    }
+                    BottomSheetBehavior.STATE_EXPANDED -> {
+                        Log.d("MainActivity", "state: expanded")
+                    }
+                    BottomSheetBehavior.STATE_COLLAPSED -> {
+                        Log.d("MainActivity", "state: collapsed")
+                        binding.viewBackgroundFilterDashboard.visibility = View.VISIBLE
+                    }
+                    BottomSheetBehavior.STATE_DRAGGING -> {
+                        Log.d("MainActivity", "state: dragging")
+                    }
+                    BottomSheetBehavior.STATE_SETTLING -> {
+                        Log.d("MainActivity", "state: settling")
+                    }
+                    BottomSheetBehavior.STATE_HALF_EXPANDED -> {
+                        Log.d("MainActivity", "state: half expanded")
+                    }
+                }
+
+            }
+
+            override fun onSlide(bottomSheet: View, slideOffset: Float) {
+            }
+        })
+    }
+
+    // PersistentBottomSheet 내부 버튼 click event
+    private fun persistentBottomSheetEvent() {
+// BottomSheet 숨김
+        bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
     private fun getDashboardPerWeek() {
@@ -119,8 +223,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         yAxisLeft.textColor = Color.rgb(163, 163, 163)
         yAxisLeft.setDrawAxisLine(false)
         yAxisLeft.axisLineWidth = 2f
-        yAxisLeft.axisMinimum = -50f // 최솟값
-        yAxisLeft.axisMaximum = 50f // 최댓값
+        yAxisLeft.axisMinimum = -100f // 최솟값
+        yAxisLeft.axisMaximum = 100f // 최댓값
         yAxisLeft.granularity = 1f
 
         // YAxis(Left) (오른쪽) - 선 유무, 데이터 최솟값/최댓값, 색상
@@ -129,8 +233,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         yAxis.textColor = Color.rgb(163, 163, 163)
         yAxis.setDrawAxisLine(false)
         yAxis.axisLineWidth = 2f
-        yAxis.axisMinimum = -50f // 최솟값
-        yAxis.axisMaximum = 50f // 최댓값
+        yAxis.axisMinimum = -100f // 최솟값
+        yAxis.axisMaximum = 100f // 최댓값
         yAxis.granularity = 1f
 
         val xDays = ArrayList<String>()
@@ -143,9 +247,19 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
             val dayXValue = if(day.toInt() < 10) day.substring(1)
             else day
 
-            if(day.toInt() == 1) xDays.add(monthXValue + "/" + dayXValue + "일")
-            else xDays.add(dayXValue + "일")
+            when (i) {
+                0 -> {
+                    startMonthDay = "$monthXValue/$dayXValue"
+                    xDays.add(monthXValue + "/" + dayXValue + "일")
+                }
+                else -> {
+                    if(i == dashBoardEmotions.size - 1) endMonthDay = "$monthXValue/$dayXValue"
+
+                    xDays.add(dayXValue + "일")
+                }
+            }
         }
+        binding.tvDateFilterDashboard.text = "$startMonthDay ~ $endMonthDay"
 
         lineChart.xAxis.valueFormatter= IndexAxisValueFormatter(xDays)
     }
