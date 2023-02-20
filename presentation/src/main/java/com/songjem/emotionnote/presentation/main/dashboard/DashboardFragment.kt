@@ -1,5 +1,6 @@
 package com.songjem.emotionnote.presentation.main.dashboard
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.util.Log
 import android.view.View
@@ -31,14 +32,22 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
     // bottomSheetBehavior
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-    private lateinit var startMonthDay : String
-    private lateinit var endMonthDay : String
+    private lateinit var startTargetDate : String
+    private lateinit var endTargetDate : String
+    private var dateXAxisPeriod : Float = 1f
 
     override fun initView() {
         setObserve()
-        getDashboardPerWeek()
+        getDashboardPerPeriod(-6)
         initBottomSheet()
         setButtonClick()
+    }
+
+    @SuppressLint("SetTextI18n")
+    private fun setDateFilter(minusCount : Int) {
+        startTargetDate = DateUtil.prevDateFromToday(count = minusCount).dateToString("yyyy/MM/dd")
+        endTargetDate = DateUtil.currentDate().dateToString("yyyy/MM/dd")
+        binding.tvDateFilterDashboard.text = "$startTargetDate ~ $endTargetDate"
     }
 
     private fun setButtonClick() {
@@ -74,20 +83,37 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
         requireActivity().findViewById<Button>(R.id.btn_weekend_dashboard_bottom_sheet).setOnClickListener {
             Log.d("songjem", "일주일 조회 버튼 선택")
+            dateXAxisPeriod = 1f
             binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            getDashboardPerPeriod(-6)
         }
 
         requireActivity().findViewById<Button>(R.id.btn_month_dashboard_bottom_sheet).setOnClickListener {
             Log.d("songjem", "한달 조회 버튼 선택")
+            dateXAxisPeriod = 5f
             binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            val currentMonth = DateUtil.currentDate().dateToString("MM")
+            when(currentMonth) {
+                "02", "04", "06", "08", "09", "11", "01" -> {
+                    getDashboardPerPeriod(-30)
+                }
+                "05", "07", "10", "12" -> {
+                    getDashboardPerPeriod(-29)
+                }
+                else -> {
+                    getDashboardPerPeriod(-27)
+                }
+            }
         }
 
         requireActivity().findViewById<Button>(R.id.btn_year_dashboard_bottom_sheet).setOnClickListener {
             Log.d("songjem", "일년 조회 버튼 선택")
+            dateXAxisPeriod = 12f
             binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            getDashboardPerPeriod(-364)
         }
     }
 
@@ -95,7 +121,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         viewModel.dashboardEmotions.observe(this) { list ->
             dashBoardEmotions = list
             binding.apply {
-                configureChartAppearance(mpLineDashboard)
+                configureChartAppearance(mpLineDashboard, dateXAxisPeriod)
                 prepareChartData(createChartData(), mpLineDashboard)
             }
         }
@@ -132,7 +158,6 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
                         Log.d("MainActivity", "state: half expanded")
                     }
                 }
-
             }
 
             override fun onSlide(bottomSheet: View, slideOffset: Float) {
@@ -146,10 +171,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
     }
 
-    private fun getDashboardPerWeek() {
+    private fun getDashboardPerPeriod(minusCount : Int) {
         val currentDate = DateUtil.currentDate().dateToString("yyyyMMdd")
-        val startDate = DateUtil.prevDateFromToday(count = -6).dateToString("yyyyMMdd")
-        viewModel.getDashboardPerWeek(startDate, currentDate)
+        val startDate = DateUtil.prevDateFromToday(count = minusCount).dateToString("yyyyMMdd")
+
+        setDateFilter(minusCount)
+        viewModel.getDashboardPerPeriod(startDate, currentDate)
     }
 
     private fun prepareChartData(data: LineData, lineChart: LineChart) {
@@ -182,7 +209,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         return chartData
     }
 
-    private fun configureChartAppearance(lineChart: LineChart) {
+    private fun configureChartAppearance(lineChart: LineChart, period : Float) {
         lineChart.extraBottomOffset = 15f // 간격
         lineChart.description.isEnabled = false // chart 밑에 description 표시 유무
 
@@ -211,7 +238,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         xAxis.setDrawAxisLine(false)
         xAxis.setDrawGridLines(false)
         xAxis.position = XAxis.XAxisPosition.BOTTOM // x축 데이터 표시 위치
-        xAxis.granularity = 1f
+        xAxis.granularity = period
         xAxis.textSize = 14f
         xAxis.textColor = Color.rgb(118, 118, 118)
         xAxis.spaceMin = 0.1f // Chart 맨 왼쪽 간격 띄우기
@@ -246,20 +273,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
             val day = dashBoardEmotions[i].targetDate.substring(6, 8)
             val dayXValue = if(day.toInt() < 10) day.substring(1)
             else day
-
-            when (i) {
-                0 -> {
-                    startMonthDay = "$monthXValue/$dayXValue"
-                    xDays.add(monthXValue + "/" + dayXValue + "일")
-                }
-                else -> {
-                    if(i == dashBoardEmotions.size - 1) endMonthDay = "$monthXValue/$dayXValue"
-
-                    xDays.add(dayXValue + "일")
-                }
-            }
+            xDays.add(dayXValue + "일")
         }
-        binding.tvDateFilterDashboard.text = "$startMonthDay ~ $endMonthDay"
 
         lineChart.xAxis.valueFormatter= IndexAxisValueFormatter(xDays)
     }
