@@ -1,5 +1,6 @@
 package com.songjem.emotionnote.presentation.main.dashboard
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.util.Log
 import android.view.View
@@ -31,8 +32,8 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
     // bottomSheetBehavior
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
-    private lateinit var startMonthDay : String
-    private lateinit var endMonthDay : String
+    private lateinit var startTargetDate : String
+    private lateinit var endTargetDate : String
 
     override fun initView() {
         setObserve()
@@ -182,6 +183,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         return chartData
     }
 
+    @SuppressLint("SetTextI18n")
     private fun configureChartAppearance(lineChart: LineChart) {
         lineChart.extraBottomOffset = 15f // 간격
         lineChart.description.isEnabled = false // chart 밑에 description 표시 유무
@@ -248,18 +250,13 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
             else day
 
             when (i) {
-                0 -> {
-                    startMonthDay = "$monthXValue/$dayXValue"
-                    xDays.add(monthXValue + "/" + dayXValue + "일")
-                }
-                else -> {
-                    if(i == dashBoardEmotions.size - 1) endMonthDay = "$monthXValue/$dayXValue"
-
-                    xDays.add(dayXValue + "일")
-                }
+                0 -> xDays.add(monthXValue + "/" + dayXValue + "일")
+                else -> xDays.add(dayXValue + "일")
             }
         }
-        binding.tvDateFilterDashboard.text = "$startMonthDay ~ $endMonthDay"
+        startTargetDate = DateUtil.prevDateFromToday(count = -6).dateToString("yyyy/MM/dd")
+        endTargetDate = DateUtil.currentDate().dateToString("yyyy/MM/dd")
+        binding.tvDateFilterDashboard.text = "$startTargetDate ~ $endTargetDate"
 
         lineChart.xAxis.valueFormatter= IndexAxisValueFormatter(xDays)
     }
