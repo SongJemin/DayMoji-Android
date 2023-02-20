@@ -22,7 +22,7 @@ interface EmotionRepository {
         targetDate : String
     ) : Maybe<EmotionReportItem>
 
-    fun getDashboardPerWeek(
+    fun getDashboardPerPeriod(
         startDate : String,
         endDate : String
     ) : Single<List<DashBoardEmotionItem>>

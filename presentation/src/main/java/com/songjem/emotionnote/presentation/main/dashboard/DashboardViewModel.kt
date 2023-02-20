@@ -4,10 +4,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.songjem.data.util.DateUtil
-import com.songjem.data.util.DateUtil.dateToString
 import com.songjem.domain.model.DashBoardEmotionItem
-import com.songjem.domain.usecase.emotion.GetDashboardPerWeekUseCase
+import com.songjem.domain.usecase.emotion.GetDashboardPerPeriodUseCase
 import com.songjem.emotionnote.base.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,7 +15,7 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel
 @Inject constructor(
-    private val getDashboardPerWeekUseCase: GetDashboardPerWeekUseCase
+    private val getDashboardPerPeriodUseCase: GetDashboardPerPeriodUseCase
 ): BaseViewModel() {
 
     private var _dashboardEmotions = MutableLiveData<List<DashBoardEmotionItem>>()
@@ -30,18 +28,19 @@ class DashboardViewModel
     val errorAlarm : LiveData<String> get() = _errorAlarm
 
     @SuppressLint("CheckResult")
-    fun getDashboardPerWeek(startDate : String, endDate : String) {
-        Log.d("songjem", "getDashboardPerWeek, startDate = $startDate, endDate = $endDate")
+    fun getDashboardPerPeriod(startDate : String, endDate : String) {
+        Log.d("songjem", "getDashboardPerPeriod, startDate = $startDate, endDate = $endDate")
 
-        getDashboardPerWeekUseCase(startDate, endDate)
+        getDashboardPerPeriodUseCase(startDate, endDate)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe({ datas ->
                 if(datas.isNotEmpty()) {
-                    Log.d("songjem", "getDashboardPerWeek Success, datas = $datas")
+                    Log.d("songjem", "getDashboardPerPeriod Success, datas = $datas")
                     _dashboardEmotions.value = datas
                 } else {
-                    Log.d("songjem", "getDashboardPerWeek No Data")
+                    Log.d("songjem", "getDashboardPerPeriod No Data")
+                    _noDataAlarm.value = true
                 }
             }, {
                 _errorAlarm.value = it.message

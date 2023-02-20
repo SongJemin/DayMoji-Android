@@ -73,12 +73,12 @@ class EmotionRepositoryImpl @Inject constructor(
             }
     }
 
-    override fun getDashboardPerWeek(startDate: String, endDate: String) : Single<List<DashBoardEmotionItem>> {
+    override fun getDashboardPerPeriod(startDate: String, endDate: String) : Single<List<DashBoardEmotionItem>> {
         Log.d("songjem", "startDate = $startDate, endDate = $endDate")
-        return localEmotionDataSource.getDashboardPerWeek(startDate, endDate)
+        return localEmotionDataSource.getDashboardPerPeriod(startDate, endDate)
             .onErrorReturn { listOf() }
             .flatMap {
-                Log.d("songjem", "DashboardPerWeekList = $it")
+                Log.d("songjem", "DashboardPerPeriodList = $it")
                 Single.just(mapperToDashBoard(it))
             }
     }
