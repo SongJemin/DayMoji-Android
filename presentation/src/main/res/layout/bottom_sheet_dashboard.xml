@@ -32,7 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:text="4주"
+        android:text="한달"
         android:textSize="15sp"
         android:textColor="@color/black"
         app:backgroundTint="@null"

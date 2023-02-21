@@ -19,4 +19,21 @@ object DateUtil {
         cal.add(Calendar.DATE, count)
         return cal.time
     }
+
+    fun getDayOfWeek(targetDate: Date) : String {
+        val cal = Calendar.getInstance()
+        cal.time = targetDate
+
+        val dayOfWeek = when(cal.get(Calendar.DAY_OF_WEEK)) {
+            1 -> "일"
+            2 -> "월"
+            3 -> "화"
+            4 -> "수"
+            5 -> "목"
+            6 -> "금"
+            7 -> "토"
+            else -> "일"
+        }
+        return dayOfWeek
+    }
 }
