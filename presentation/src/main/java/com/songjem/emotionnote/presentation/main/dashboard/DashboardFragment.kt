@@ -34,7 +34,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
     private lateinit var bottomSheetBehavior: BottomSheetBehavior<LinearLayout>
     private lateinit var startTargetDate : String
     private lateinit var endTargetDate : String
-    private var dateXAxisPeriod : Float = 1f
+    private var showXLabelCnt = 7
 
     override fun initView() {
         setObserve()
@@ -83,18 +83,20 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
         requireActivity().findViewById<Button>(R.id.btn_weekend_dashboard_bottom_sheet).setOnClickListener {
             Log.d("songjem", "일주일 조회 버튼 선택")
-            dateXAxisPeriod = 1f
+            showXLabelCnt = 7
             binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             getDashboardPerPeriod(-6)
         }
 
         requireActivity().findViewById<Button>(R.id.btn_month_dashboard_bottom_sheet).setOnClickListener {
-            Log.d("songjem", "한달 조회 버튼 선택")
-            dateXAxisPeriod = 5f
+            Log.d("songjem", "최근 4주 조회 버튼 선택")
+            showXLabelCnt = 5
             binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            val currentMonth = DateUtil.currentDate().dateToString("MM")
+
+            getDashboardPerPeriod(-28)
+/*            val currentMonth = DateUtil.currentDate().dateToString("MM")
             when(currentMonth) {
                 "02", "04", "06", "08", "09", "11", "01" -> {
                     getDashboardPerPeriod(-30)
@@ -105,12 +107,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
                 else -> {
                     getDashboardPerPeriod(-27)
                 }
-            }
+            }*/
         }
 
         requireActivity().findViewById<Button>(R.id.btn_year_dashboard_bottom_sheet).setOnClickListener {
             Log.d("songjem", "일년 조회 버튼 선택")
-            dateXAxisPeriod = 12f
+            showXLabelCnt = 12
             binding.viewBackgroundFilterDashboard.visibility = View.INVISIBLE
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
             getDashboardPerPeriod(-364)
@@ -121,7 +123,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         viewModel.dashboardEmotions.observe(this) { list ->
             dashBoardEmotions = list
             binding.apply {
-                configureChartAppearance(mpLineDashboard, dateXAxisPeriod)
+                configureChartAppearance(mpLineDashboard, showXLabelCnt)
                 prepareChartData(createChartData(), mpLineDashboard)
             }
         }
@@ -209,9 +211,11 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
         return chartData
     }
 
-    private fun configureChartAppearance(lineChart: LineChart, period : Float) {
-        lineChart.extraBottomOffset = 15f // 간격
+    private fun configureChartAppearance(lineChart: LineChart, showXLabelCnt : Int) {
+//        lineChart.extraBottomOffset = 15f // 간격
         lineChart.description.isEnabled = false // chart 밑에 description 표시 유무
+        lineChart.setScaleEnabled(false)
+        lineChart.setPinchZoom(false)
 
         val markerView = MyMarkerView(context, R.layout.custom_marker_view)
         markerView.chartView = lineChart
@@ -235,10 +239,12 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
         // XAxis (아래쪽) - 선 유무, 사이즈, 색상, 축 위치 설정
         val xAxis = lineChart.xAxis
+        xAxis.setLabelCount(showXLabelCnt, true)
         xAxis.setDrawAxisLine(false)
         xAxis.setDrawGridLines(false)
+
         xAxis.position = XAxis.XAxisPosition.BOTTOM // x축 데이터 표시 위치
-        xAxis.granularity = period
+        xAxis.granularity = 1f
         xAxis.textSize = 14f
         xAxis.textColor = Color.rgb(118, 118, 118)
         xAxis.spaceMin = 0.1f // Chart 맨 왼쪽 간격 띄우기
@@ -246,11 +252,13 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
         // YAxis(Right) (왼쪽) - 선 유무, 데이터 최솟값/최댓값, 색상
         val yAxisLeft = lineChart.axisLeft
+//        yAxisLeft.setLabelCount(5, true)
         yAxisLeft.textSize = 14f
         yAxisLeft.textColor = Color.rgb(163, 163, 163)
         yAxisLeft.setDrawAxisLine(false)
         yAxisLeft.axisLineWidth = 2f
         yAxisLeft.axisMinimum = -100f // 최솟값
+
         yAxisLeft.axisMaximum = 100f // 최댓값
         yAxisLeft.granularity = 1f
 
@@ -266,13 +274,11 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
         val xDays = ArrayList<String>()
         for(i in dashBoardEmotions.indices){
-            val month = dashBoardEmotions[i].targetDate.substring(4, 6)
-            val monthXValue = if(month.toInt() < 10) month.substring(1)
-            else month
-
             val day = dashBoardEmotions[i].targetDate.substring(6, 8)
+
             val dayXValue = if(day.toInt() < 10) day.substring(1)
             else day
+            Log.d("songjem", "dayXValue = " + dayXValue)
             xDays.add(dayXValue + "일")
         }
 
