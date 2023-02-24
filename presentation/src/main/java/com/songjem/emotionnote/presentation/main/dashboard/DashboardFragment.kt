@@ -254,7 +254,7 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
 
 //        xAxis.isGranularityEnabled = true
         xAxis.position = XAxis.XAxisPosition.BOTTOM // x축 데이터 표시 위치
-        xAxis.granularity = xLabelGranularity
+
         xAxis.textSize = 14f
         xAxis.textColor = Color.rgb(0, 0, 0)
         xAxis.spaceMin = 0.1f // Chart 맨 왼쪽 간격 띄우기
@@ -299,6 +299,9 @@ class DashboardFragment : BaseFragment<FragmentDashboardBinding>(R.layout.fragme
                 xDays.add("$dayXValue($dayOfWeek)")
             } else xDays.add("$month/$day($dayOfWeek)")
         }
+
+        if(xLabelGranularity == 1f) xAxis.granularity = xLabelGranularity
+        else xAxis.granularity = (dashBoardEmotions.size - 1).toFloat()
 
         lineChart.xAxis.valueFormatter= IndexAxisValueFormatter(xDays)
     }
